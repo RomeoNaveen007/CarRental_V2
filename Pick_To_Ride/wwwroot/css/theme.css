@@ -1,0 +1,89 @@
+﻿:root {
+    /* ===== Layout / Global ===== */
+    --color-primary: #2D3436; /* Charcoal (navbar, header, footer) */
+    --color-secondary: #636E72; /* Slate Grey */
+    --color-accent: #E1B12C; /* Gold hover / highlights */
+    --color-bg-light: #F5F6FA; /* Page background */
+    --color-text-dark: #2C3A47; /* Main text */
+    --color-success: #27AE60; /* Emerald Green */
+    --color-warning: #E67E22; /* Burnt Orange */
+    --color-danger: #C0392B; /* Deep Maroon Red */
+    /* ===== Car Page ===== */
+    --color-car-primary: #2980B9; /* Deep Ocean Blue */
+    --color-car-accent: #1ABC9C; /* Turquoise */
+    /* ===== User Page ===== */
+    --color-user-primary: #6C5CE7; /* Royal Indigo */
+    --color-user-accent: #A29BFE; /* Soft Lavender */
+    /* ===== Driver Page ===== */
+    --color-driver-primary: #27AE60; /* Emerald */
+    --color-driver-accent: #16A085; /* Teal */
+}
+
+/* ===== Layout Styles ===== */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--color-bg-light);
+    color: var(--color-text-dark);
+}
+
+.navbar {
+    background-color: var(--color-primary) !important;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+
+    .navbar a {
+        color: var(--color-bg-light) !important;
+        font-weight: 500;
+    }
+
+        .navbar a:hover {
+            color: var(--color-accent) !important;
+        }
+
+footer {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: 1rem;
+    text-align: center;
+}
+
+/* ===== Card Styles ===== */
+.card-custom {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #fff;
+    transition: transform 0.2s ease-in-out;
+}
+
+    .card-custom:hover {
+        transform: scale(1.02);
+    }
+
+/* ===== Page-Specific Accents ===== */
+.page-car .card-custom {
+    border-left: 5px solid var(--color-car-primary);
+}
+
+.page-user .card-custom {
+    border-left: 5px solid var(--color-user-primary);
+}
+
+.page-driver .card-custom {
+    border-left: 5px solid var(--color-driver-primary);
+}
+
+/* ===== Buttons ===== */
+.btn-custom {
+    border-radius: 8px;
+    font-weight: 500;
+    background-color: var(--color-primary);
+    color: #fff;
+    border: none;
+}
+
+    .btn-custom:hover {
+        background-color: var(--color-accent);
+        color: var(--color-primary);
+    }

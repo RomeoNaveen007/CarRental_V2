@@ -1,0 +1,36 @@
+﻿@model Pick_To_Ride.Models.Entities.User
+@{
+    ViewData["Title"] = "User Details";
+    ViewData["BodyClass"] = "page-user";
+
+}
+
+<div class="container py-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>@Model.FullName</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-2">
+                    <img src="@(string.IsNullOrEmpty(Model.ProfileImage) ? "/images/default-avatar.png" : Model.ProfileImage)" style="width:120px;height:120px;border-radius:8px;" />
+                </div>
+                <div class="col-md-10">
+                    <p><strong>Username:</strong> @Model.UserName</p>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                    <p><strong>Phone:</strong> @Model.PhoneNumber</p>
+                    <p><strong>Role:</strong> @Model.Role</p>
+                    <p><strong>Active:</strong> @(Model.IsActive ? "Yes" : "No")</p>
+                    <p><strong>Address:</strong> @Model.Address</p>
+                    <p><strong>City:</strong> @Model.City</p>
+                    <p><strong>Licence Number:</strong> @Model.LicenceNumber</p>
+                    <p><strong>NIC:</strong> @Model.NIC</p>
+                    <p><strong>Created:</strong> @Model.CreatedDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p>
+                </div>
+            </div>
+
+            <a asp-action="Edit" asp-route-id="@Model.UserId" class="btn btn-primary">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back</a>
+        </div>
+    </div>
+</div>

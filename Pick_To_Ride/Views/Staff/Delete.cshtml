@@ -1,0 +1,29 @@
+﻿@model Pick_To_Ride.Models.Entities.Staff
+
+@{
+    ViewData["Title"] = "Delete Staff";
+}
+
+<div class="container py-4">
+    <div class="card shadow-lg p-4 mx-auto" style="max-width:500px; backdrop-filter: blur(8px); background: rgba(255,255,255,0.2);">
+        <h3 class="text-center mb-3 text-danger">Delete Staff</h3>
+        <div class="text-center mb-3">
+            <img src="@(string.IsNullOrEmpty(Model.User.ProfileImage) ? "/images/default-avatar.png" : Model.User.ProfileImage)"
+                 class="rounded-circle" style="width:100px;height:100px;object-fit:cover;">
+        </div>
+
+        <p><strong>Name:</strong> @Model.User.FullName</p>
+        <p><strong>Email:</strong> @Model.User.Email</p>
+        <p><strong>Role:</strong> @Model.User.Role</p>
+        <p><strong>Availability:</strong> @Model.Availability</p>
+        <p><strong>Salary:</strong> @Model.Salary.ToString("C")</p>
+
+        <div class="text-center mt-4">
+            <form asp-action="DeleteConfirmed" method="post">
+                <input type="hidden" asp-for="StaffId" />
+                <button type="submit" class="btn btn-danger me-2">Delete</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

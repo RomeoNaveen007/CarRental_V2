@@ -1,0 +1,127 @@
+﻿@model Pick_To_Ride.ViewModels.CarViewModel
+@{
+    ViewData["Title"] = "Update Car";
+    ViewData["BodyClass"] = "page-car";
+
+}
+
+<div class="container py-5 d-flex justify-content-center">
+    <div class="card shadow-lg p-4 bg-light w-100" style="max-width: 900px;">
+        <h2 class="text-center text-warning mb-4">✏️ Update Car</h2>
+
+        <form asp-action="UpdateCar" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="CarId" />
+
+            <div class="row g-3">
+                <!-- Car Name -->
+                <div class="col-md-6">
+                    <label asp-for="CarName" class="form-label fw-bold"></label>
+                    <input asp-for="CarName" class="form-control" />
+                    <span asp-validation-for="CarName" class="text-danger"></span>
+                </div>
+
+                <!-- Brand -->
+                <div class="col-md-6">
+                    <label asp-for="Brand" class="form-label fw-bold"></label>
+                    <input asp-for="Brand" class="form-control" />
+                    <span asp-validation-for="Brand" class="text-danger"></span>
+                </div>
+
+                <!-- Registration Number -->
+                <div class="col-md-6">
+                    <label asp-for="RegistrationNumber" class="form-label fw-bold"></label>
+                    <input asp-for="RegistrationNumber" class="form-control" />
+                    <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
+                </div>
+
+                <!-- Fuel Type -->
+                <div class="col-md-6">
+                    <label asp-for="FuelType" class="form-label fw-bold"></label>
+                    <input asp-for="FuelType" class="form-control" />
+                    <span asp-validation-for="FuelType" class="text-danger"></span>
+                </div>
+
+                <!-- Transmission -->
+                <div class="col-md-6">
+                    <label asp-for="Transmission" class="form-label fw-bold"></label>
+                    <input asp-for="Transmission" class="form-control" />
+                    <span asp-validation-for="Transmission" class="text-danger"></span>
+                </div>
+
+                <!-- Seats -->
+                <div class="col-md-6">
+                    <label asp-for="Seats" class="form-label fw-bold"></label>
+                    <input asp-for="Seats" class="form-control" />
+                    <span asp-validation-for="Seats" class="text-danger"></span>
+                </div>
+
+                <!-- Daily Rate -->
+                <div class="col-md-6">
+                    <label asp-for="DailyRate" class="form-label fw-bold"></label>
+                    <input asp-for="DailyRate" type="number" step="0.01" class="form-control" />
+                    <span asp-validation-for="DailyRate" class="text-danger"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="col-12">
+                    <label asp-for="Description" class="form-label fw-bold"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Status -->
+                <div class="col-md-6">
+                    <label asp-for="Status" class="form-label fw-bold"></label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="Available" selected="@Model.Status == " Available"">Available</option>
+                        <option value="Unavailable" selected="@Model.Status == " Unavailable"">Unavailable</option>
+                        <option value="Maintenance" selected="@Model.Status == " Maintenance"">Maintenance</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <!-- Category -->
+                <div class="col-md-6">
+                    <label asp-for="Category" class="form-label fw-bold"></label>
+                    <select asp-for="Category" class="form-select">
+                        <option value="SUV" selected="@Model.Category == " SUV"">SUV</option>
+                        <option value="Sedan" selected="@Model.Category == " Sedan"">Sedan</option>
+                        <option value="Hatchback" selected="@Model.Category == " Hatchback"">Hatchback</option>
+                        <option value="Luxury" selected="@Model.Category == " Luxury"">Luxury</option>
+                    </select>
+                    <span asp-validation-for="Category" class="text-danger"></span>
+                </div>
+
+                <!-- Car Image -->
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Car Image</label>
+                    @if (!string.IsNullOrEmpty(Model.ImageURL))
+                    {
+                        <img src="@Model.ImageURL" alt="Car" class="img-thumbnail mb-2" style="width:120px; height:80px; object-fit:cover;" />
+                    }
+                    <input asp-for="ImageFile" type="file" class="form-control" />
+                </div>
+
+                <!-- Car Logo -->
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Car Logo</label>
+                    @if (!string.IsNullOrEmpty(Model.ImageLogo))
+                    {
+                        <img src="@Model.ImageLogo" alt="Logo" class="img-thumbnail mb-2" style="width:100px; height:60px; object-fit:contain;" />
+                    }
+                    <input asp-for="ImageLogoFile" type="file" class="form-control" />
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-warning px-4 py-2">Save Changes</button>
+                <a asp-action="GetAllCars" class="btn btn-secondary px-4 py-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

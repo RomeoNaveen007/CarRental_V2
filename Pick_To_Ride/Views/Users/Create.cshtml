@@ -1,0 +1,88 @@
+﻿@model Pick_To_Ride.ViewModels.UserViewModel
+@{
+    ViewData["BodyClass"] = "page-user";
+}
+
+<h2>Create User</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="UserName" class="form-label"></label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PhoneNumber" class="form-label"></label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="LicenceNumber" class="form-label fw-bold"></label>
+        <input asp-for="LicenceNumber" class="form-control" placeholder=" B1234567" />
+        <span asp-validation-for="LicenceNumber" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="NIC" class="form-label fw-bold"></label>
+        <input asp-for="NIC" class="form-control" placeholder=" 991234567V" />
+        <span asp-validation-for="NIC" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ProfileImageFile" class="form-label">Profile Image</label>
+        <input asp-for="ProfileImageFile" type="file" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Role" class="form-label"></label>
+        <select asp-for="Role" class="form-control">
+            <option value="">-- Select Role --</option>
+            <option value="Admin">Admin</option>
+            <option value="Customer">Customer</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label"></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="City" class="form-label"></label>
+        <input asp-for="City" class="form-control" />
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

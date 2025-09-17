@@ -1,0 +1,103 @@
+﻿@model Pick_To_Ride.ViewModels.UserViewModel
+@{
+    ViewData["BodyClass"] = "page-user";
+}
+
+<h2 class="mb-4">Edit User</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+    <input type="hidden" asp-for="UserId" />
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="UserName" class="form-label"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" type="email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="PhoneNumber" class="form-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" type="password" class="form-control" placeholder="Leave blank to keep old password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Role" class="form-label"></label>
+            <select asp-for="Role" class="form-select">
+                <option value="">-- Select Role --</option>
+                <option value="Admin">Admin</option>
+                <option value="Driver">Driver</option>
+                <option value="Customer">Customer</option>
+            </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="City" class="form-label"></label>
+            <input asp-for="City" class="form-control" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+
+        <div class="col-12 mb-3">
+            <label asp-for="Address" class="form-label"></label>
+            <textarea asp-for="Address" rows="3" class="form-control"></textarea>
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="LicenceNumber" class="form-label fw-bold"></label>
+            <input asp-for="LicenceNumber" class="form-control" placeholder="Ex: B1234567" />
+            <span asp-validation-for="LicenceNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="NIC" class="form-label fw-bold"></label>
+            <input asp-for="NIC" class="form-control" placeholder="Ex: 991234567V" />
+            <span asp-validation-for="NIC" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label>Current Profile Image</label><br />
+            @if (!string.IsNullOrEmpty(Model.ProfileImage))
+            {
+                <img src="@Model.ProfileImage" width="100" class="mb-2 rounded shadow-sm" />
+            }
+            <input asp-for="ProfileImageFile" type="file" class="form-control" />
+            <span asp-validation-for="ProfileImageFile" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3 form-check d-flex align-items-center">
+            <input asp-for="IsActive" class="form-check-input me-2" />
+            <label asp-for="IsActive" class="form-check-label"></label>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-success">Update</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+</form>

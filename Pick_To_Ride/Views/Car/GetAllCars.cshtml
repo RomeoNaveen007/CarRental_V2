@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Pick_To_Ride.Models.Entities.Car>
+
+@{
+    ViewData["Title"] = "All Cars";
+    ViewData["BodyClass"] = "page-car";
+
+}
+
+<div class="container py-5">
+    <h2 class="text-primary mb-4">🚗 All Cars</h2>
+
+    <a asp-action="AddCar" class="btn btn-success mb-3">➕ Add New Car</a>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Car</th>
+                    <th>Brand</th>
+                    <th>RegistrationNumber</th>
+                    <th>Fuel</th>
+                    <th>Transmission</th>
+                    <th>Seats</th>
+                    <th>Rate</th>
+                    <th>Logo</th>
+                    <th>Status</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var car in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src="@car.ImageURL" alt="Car" style="width:80px;height:60px;object-fit:cover;" />
+                            <div>@car.CarName</div>
+                        </td>
+                        <td>@car.Brand</td>
+                        <td>@car.RegistrationNumber</td>
+                        <td>@car.FuelType</td>
+                        <td>@car.Transmission</td>
+                        <td>@car.Seats</td>
+                        <td>$@car.DailyRate</td>
+                        <td>
+                            <img src="@car.ImageLogo" alt="Logo" style="width:50px;height:40px;object-fit:contain;" />
+                        </td>
+                        <td>
+                            <span class="badge bg-@(car.Status == "Available" ? "success" : "danger")">
+                                @car.Status
+                            </span>
+                        </td>
+                        <td>@car.Category</td>
+                        <td>
+                            <a asp-action="CarDetails" asp-route-id="@car.CarId" class="btn btn-info btn-sm">Details</a>
+                            <a asp-action="UpdateCar" asp-route-id="@car.CarId" class="btn btn-warning btn-sm">Edit</a>
+                            <a asp-action="DeleteCar" asp-route-id="@car.CarId" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

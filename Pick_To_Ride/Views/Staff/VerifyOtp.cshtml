@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Verify OTP";
+}
+
+<h3>Verify OTP</h3>
+
+<form asp-action="VerifyOtp" method="post">
+    <div class="form-group">
+        <label>Enter OTP</label>
+        <input type="text" name="otpInput" class="form-control" maxlength="4" required />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Verify</button>
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="text-danger mt-2">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}

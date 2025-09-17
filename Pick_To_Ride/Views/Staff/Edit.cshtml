@@ -1,0 +1,110 @@
+﻿@model Pick_To_Ride.ViewModels.StaffViewModel
+
+@{
+    ViewData["Title"] = ViewData["Title"] ?? "Edit Staff";
+}
+
+<div class="container py-4">
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 700px; backdrop-filter: blur(8px); background: rgba(255,255,255,0.2);">
+        <h3 class="text-center mb-4">@ViewData["Title"]</h3>
+
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="StaffId" />
+            <input type="hidden" asp-for="Role" />
+
+            <!-- First Name / Last Name -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="FirstName" class="form-label fw-bold"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="LastName" class="form-label fw-bold"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Username / Email -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="UserName" class="form-label fw-bold"></label>
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label fw-bold"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Phone / NIC -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber" class="form-label fw-bold"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="NIC" class="form-label fw-bold"></label>
+                    <input asp-for="NIC" class="form-control" />
+                    <span asp-validation-for="NIC" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Licence / Password -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="LicenceNumber" class="form-label fw-bold"></label>
+                    <input asp-for="LicenceNumber" class="form-control" />
+                    <span asp-validation-for="LicenceNumber" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Password" class="form-label fw-bold"></label>
+                    <input asp-for="Password" class="form-control" placeholder="Leave blank to keep current password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Availability / Salary -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Availability" class="form-label fw-bold"></label>
+                    <select asp-for="Availability" class="form-select">
+                        <option value="Available" selected="@Model.Availability == " Available"">Available</option>
+                        <option value="On Duty" selected="@Model.Availability == " On Duty"">On Duty</option>
+                        <option value="Leave" selected="@Model.Availability == " Leave"">Leave</option>
+                    </select>
+                    <span asp-validation-for="Availability" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Salary" class="form-label fw-bold"></label>
+                    <input asp-for="Salary" class="form-control" />
+                    <span asp-validation-for="Salary" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Profile Image -->
+            <div class="mb-3">
+                <label asp-for="ProfileImageFile" class="form-label fw-bold"></label>
+                <input asp-for="ProfileImageFile" type="file" class="form-control" />
+                <span asp-validation-for="ProfileImageFile" class="text-danger"></span>
+                @if (!string.IsNullOrEmpty(Model.ProfileImage))
+                {
+                    <img src="@Model.ProfileImage" class="rounded-circle mt-2" style="width:100px;height:100px;object-fit:cover;" />
+                }
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success me-2">Update</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

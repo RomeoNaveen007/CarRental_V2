@@ -1,0 +1,61 @@
+﻿.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,.1);
+}
+
+    .table-custom th, .table-custom td {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+    }
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.preview-img {
+    display: block;
+    margin-top: 10px;
+    max-width: 120px;
+    border-radius: 8px;
+}
+
+.card-custom {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,.1);
+    max-width: 400px;
+    margin: auto;
+}
+
+.profile-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.status.active {
+    color: green;
+    font-weight: bold;
+}
+
+.status.inactive {
+    color: red;
+    font-weight: bold;
+}
