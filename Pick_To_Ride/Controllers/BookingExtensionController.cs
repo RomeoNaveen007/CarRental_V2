@@ -22,6 +22,7 @@ public class BookingExtensionController : BaseController
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(BookingExtensionViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
@@ -45,14 +46,15 @@ public class BookingExtensionController : BaseController
 
             bool driverAvailable = true;
 
-            if (!string.IsNullOrEmpty(booking.DriverId))
+            if (booking.DriverId.HasValue)
             {
-                var driverId = Guid.Parse(booking.DriverId);
+                var driverId = booking.DriverId.Value;
                 driverAvailable = !_context.Bookings
-                    .Any(b => b.DriverId == driverId.ToString() && b.BookingId != booking.BookingId &&
+                    .Any(b => b.DriverId == driverId && b.BookingId != booking.BookingId &&
                               ((model.NewEndDate >= b.StartDate && model.NewEndDate <= b.EndDate) ||
                                (booking.StartDate >= b.StartDate && booking.StartDate <= b.EndDate)));
             }
+
 
             var extension = new BookingExtentionRequest
             {
@@ -103,7 +105,7 @@ public class BookingExtensionController : BaseController
     {
         var pendingRequests = await _context.BookingExtentionRequests
             .Where(r => r.Status == "Pending")
-            .Include(r => r.Booking)
+            .Include(r => r.Booking)           
             .ThenInclude(b => b.Car)
             .ToListAsync();
 

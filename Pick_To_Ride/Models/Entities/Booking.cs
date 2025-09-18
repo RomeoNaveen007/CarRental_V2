@@ -15,7 +15,7 @@ namespace Pick_To_Ride.Models.Entities
         public Car Car { get; set; }
 
         [Required(ErrorMessage = "Customer is required.")]
-        public Guid CustomerId { get; set; }  // FK to User
+        public string CustomerId { get; set; }
         public User Customer { get; set; }
 
         public Guid? DriverId { get; set; }   // Optional staff driver

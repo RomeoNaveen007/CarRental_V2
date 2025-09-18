@@ -18,6 +18,7 @@ namespace Pick_To_Ride.ViewModels
         public string Method { get; set; } = "Card";
 
         public string Status { get; set; }
+        public string BookingDetails { get; set; }
     }
 }
 

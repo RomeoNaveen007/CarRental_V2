@@ -8,7 +8,7 @@
         <div class="col-md-3">
             <div class="card p-3">
                 <h6>Total Bookings</h6>
-                <h3>@model?.TotalBookings ?? 0</h3>
+                <h3>@@model?.TotalBookings ?? 0</h3>
             </div>
         </div>
         <div class="col-md-3">
@@ -20,13 +20,13 @@
         <div class="col-md-3">
             <div class="card p-3">
                 <h6>Active Cars</h6>
-                <h3>@model?.ActiveCars ?? 0</h3>
+                <h3>@@model?.ActiveCars ?? 0</h3>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card p-3">
                 <h6>Drivers On Duty</h6>
-                <h3>@model?.DriversOnDuty ?? 0</h3>
+                <h3>@@model?.DriversOnDuty ?? 0</h3>
             </div>
         </div>
     </div>
@@ -64,6 +64,10 @@
                     y: { beginAtZero: true, precision:0 }
                 }
             }
+        
         });
     </script>
 }
+
+
+                                @* Install-Package Newtonsoft.Json *@       

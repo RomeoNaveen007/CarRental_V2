@@ -12,7 +12,7 @@ namespace Pick_To_Ride.Controllers
     public class BookingController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        
         public BookingController(ApplicationDbContext context)
         {
             _context = context;
@@ -72,7 +72,7 @@ namespace Pick_To_Ride.Controllers
                 var booking = new Booking
                 {
                     CarId = model.CarId,
-                    CustomerId = model.CustomerId,
+                    CustomerId = (model.CustomerId),
                     StartDate = model.StartDate,
                     EndDate = model.EndDate,
                     PickupLocation = model.PickupLocation,

@@ -15,7 +15,7 @@ namespace Pick_To_Ride.ViewModels
         public string CarName { get; set; }
 
         [Required]
-        public Guid CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public string CustomerName { get; set; }
 
         public Guid? DriverId { get; set; }

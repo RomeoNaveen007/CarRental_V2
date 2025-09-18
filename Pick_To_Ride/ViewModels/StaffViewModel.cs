@@ -1,4 +1,5 @@
 ﻿using Pick_To_Ride.Attributes;
+using Pick_To_Ride.Models.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pick_To_Ride.ViewModels
@@ -9,7 +10,7 @@ namespace Pick_To_Ride.ViewModels
         public Guid? StaffId { get; set; }
 
         [Required(ErrorMessage = "Availability is required")]
-        public string? Availability { get; set; }
+        public StaffAvailability Availability { get; set; } = StaffAvailability.Available;
 
         [Range(0, double.MaxValue, ErrorMessage = "Salary must be non-negative")]
         public decimal Salary { get; set; }
