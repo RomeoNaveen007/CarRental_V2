@@ -1,0 +1,39 @@
+﻿@model Pick_To_Ride.ViewModels.AuditLogViewModel
+
+@{
+    ViewData["Title"] = "Delete Audit Log";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4 text-danger">Delete Audit Log</h2>
+
+    <div class="alert alert-warning">
+        <p>Are you sure you want to delete this Audit Log?</p>
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">Action</dt>
+        <dd class="col-sm-9">@Model.Action</dd>
+
+        <dt class="col-sm-3">Entity</dt>
+        <dd class="col-sm-9">@Model.EntityName</dd>
+
+        <dt class="col-sm-3">Entity ID</dt>
+        <dd class="col-sm-9">@Model.EntityId</dd>
+
+        <dt class="col-sm-3">Performed By</dt>
+        <dd class="col-sm-9">@Model.PerformedBy</dd>
+
+        <dt class="col-sm-3">Timestamp</dt>
+        <dd class="col-sm-9">@Model.Timestamp.ToLocalTime().ToString("g")</dd>
+
+        <dt class="col-sm-3">Details</dt>
+        <dd class="col-sm-9">@Model.Details</dd>
+    </dl>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="AuditLogId" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

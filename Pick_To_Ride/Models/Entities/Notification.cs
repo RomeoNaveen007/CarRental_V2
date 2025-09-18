@@ -7,7 +7,7 @@ namespace Pick_To_Ride.Models.Entities
         [Key]
         public Guid NotificationId { get; set; } = Guid.NewGuid();
 
-        public Guid RecipientUserId { get; set; } // driver user id or admin user id
+        public Guid UserId { get; set; } // driver user id or admin user id
 
         public string Message { get; set; }
 

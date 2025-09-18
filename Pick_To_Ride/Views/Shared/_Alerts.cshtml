@@ -1,0 +1,22 @@
+﻿@* Shared Alerts Partial *@
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show popup-alert" role="alert">
+        <strong>🎉 Success:</strong> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Info"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show popup-alert" role="alert">
+        <strong>ℹ️ Info:</strong> @TempData["Info"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show popup-alert" role="alert">
+        <strong>⚠️ Error:</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}

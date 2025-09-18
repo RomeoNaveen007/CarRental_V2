@@ -1,0 +1,30 @@
+﻿@model Pick_To_Ride.ViewModels.BookingViewModel
+
+<div class="container mt-4">
+    <h2>Create Booking</h2>
+    <form asp-action="Create" method="post">
+        <input type="hidden" asp-for="CarId" />
+
+        <div class="mb-3">
+            <label asp-for="StartDate" class="form-label"></label>
+            <input asp-for="StartDate" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="EndDate" class="form-label"></label>
+            <input asp-for="EndDate" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PickupLocation" class="form-label"></label>
+            <input asp-for="PickupLocation" class="form-control" />
+        </div>
+
+        <div class="form-check mb-3">
+            <input asp-for="DriverRequired" class="form-check-input" />
+            <label asp-for="DriverRequired" class="form-check-label">Need Driver?</label>
+        </div>
+
+        <button type="submit" class="btn btn-success">Book</button>
+    </form>
+</div>

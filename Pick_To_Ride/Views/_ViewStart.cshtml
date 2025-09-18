@@ -1,3 +1,40 @@
-﻿@{
+﻿@* 
+@using System.Security.Claims
+@{
+    var layout = "_GuestLayout"; // Default layout for unauthenticated users
+
+    if (User.Identity.IsAuthenticated)
+    {
+        var claimsIdentity = User.Identity as ClaimsIdentity;
+        var role = claimsIdentity?.FindFirst(ClaimTypes.Role)?.Value ?? "";
+
+        switch (role)
+        {
+            case "Admin":
+                layout = "_Layout"; // Admin layout
+                break;
+            case "Customer":
+                layout = "_CustomerLayout"; // Customer layout
+                break;
+            case "Driver":
+                layout = "_DriverLayout"; // Driver layout
+                break;
+            case "Staff":
+                layout = "_StaffLayout"; // Staff layout
+                break;
+            default:
+                layout = "_GuestLayout"; // fallback
+                break;
+        }
+    }
+
+    Layout = layout;
+} *@
+
+
+
+@{
     Layout = "_Layout";
 }
+
+

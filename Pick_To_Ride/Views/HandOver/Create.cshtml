@@ -1,0 +1,39 @@
+﻿@model Pick_To_Ride.ViewModels.HandOverViewModel
+
+<div class="container py-4">
+    <div class="card shadow p-4 mx-auto" style="max-width:600px;">
+        <h4>Handover Car</h4>
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="CustomerName" class="form-label"></label>
+                <input asp-for="CustomerName" class="form-control" />
+                <span asp-validation-for="CustomerName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="NIC" class="form-label"></label>
+                <input asp-for="NIC" class="form-control" />
+                <span asp-validation-for="NIC" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="LicenceNumber" class="form-label"></label>
+                <input asp-for="LicenceNumber" class="form-control" />
+                <span asp-validation-for="LicenceNumber" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BookingCode" class="form-label"></label>
+                <input asp-for="BookingCode" class="form-control" />
+                <span asp-validation-for="BookingCode" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-success">Hand Over</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

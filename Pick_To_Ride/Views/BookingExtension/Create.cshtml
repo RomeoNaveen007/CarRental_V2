@@ -1,0 +1,24 @@
+﻿@model Pick_To_Ride.ViewModels.BookingExtensionViewModel
+
+<div class="container py-4">
+    <div class="card shadow p-4 mx-auto" style="max-width:600px;">
+        <h4>Request Booking Extension</h4>
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="NewEndDate" class="form-label"></label>
+                <input asp-for="NewEndDate" class="form-control" />
+                <span asp-validation-for="NewEndDate" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Reason" class="form-label"></label>
+                <textarea asp-for="Reason" class="form-control"></textarea>
+                <span asp-validation-for="Reason" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-success">Submit Request</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,11 +1,19 @@
-﻿namespace Pick_To_Ride.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Pick_To_Ride.Models.Entities
 {
     public class HandOverRecord
     {
+        [Key]
         public Guid HandOverId { get; set; } = Guid.NewGuid();
-        public Guid BookingId { get; set; }
-        public Guid UserId { get; set; } // User who is handing over the car and the driver and who receive it 
-        public DateTime HandOverDate { get; set; }
 
+        [Required]
+        public Guid BookingId { get; set; }
+
+        [Required]
+        public Guid UserId { get; set; } // User who receives the car (customer) or driver handing over
+
+        [Required]
+        public DateTime HandOverDate { get; set; } = DateTime.UtcNow;
     }
 }

@@ -1,0 +1,32 @@
+﻿@model Pick_To_Ride.ViewModels.AuditLogViewModel
+
+@{
+    ViewData["Title"] = "Audit Log Details";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">Audit Log Details</h2>
+
+    <dl class="row">
+        <dt class="col-sm-3">Action</dt>
+        <dd class="col-sm-9">@Model.Action</dd>
+
+        <dt class="col-sm-3">Entity</dt>
+        <dd class="col-sm-9">@Model.EntityName</dd>
+
+        <dt class="col-sm-3">Entity ID</dt>
+        <dd class="col-sm-9">@Model.EntityId</dd>
+
+        <dt class="col-sm-3">Performed By</dt>
+        <dd class="col-sm-9">@Model.PerformedBy</dd>
+
+        <dt class="col-sm-3">Timestamp</dt>
+        <dd class="col-sm-9">@Model.Timestamp.ToLocalTime().ToString("f")</dd>
+
+        <dt class="col-sm-3">Details</dt>
+        <dd class="col-sm-9">@Model.Details</dd>
+    </dl>
+
+    <a asp-action="Edit" asp-route-id="@Model.AuditLogId" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</div>

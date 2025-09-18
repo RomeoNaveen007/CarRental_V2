@@ -3,13 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pick_To_Ride.Models.Entities
 {
+    public enum StaffAvailability { Available, OnDuty, Unavailable }
+
     public class Staff
     {
         [Key]
         public Guid StaffId { get; set; }
 
         [Required, StringLength(50)]
-        public string Availability { get; set; } // e.g., Available / On Duty
+        public StaffAvailability Availability { get; set; } = StaffAvailability.Available;
 
         [Range(0, double.MaxValue)]
         public decimal Salary { get; set; }
@@ -20,5 +22,12 @@ namespace Pick_To_Ride.Models.Entities
 
         [ForeignKey(nameof(UserId))]
         public User User { get; set; } // navigation property
+
+        public string FullName { get; set; }
+        public bool IsDriver { get; set; } = true;
+        public string Email { get; set; }
+
+
+
     }
 }

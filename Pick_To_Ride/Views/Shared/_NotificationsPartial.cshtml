@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Pick_To_Ride.Models.Entities.Notification>
+
+<div class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-bell"></i>
+        <span class="badge bg-danger">@Model.Count(n => !n.IsRead)</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="min-width:300px;">
+        @if (!Model.Any())
+        {
+            <li class="dropdown-item">No notifications</li>
+        }
+        else
+        {
+            @foreach (var n in Model)
+            {
+                <li class="dropdown-item d-flex justify-content-between align-items-start">
+                    <div>
+                        <div>@n.Message</div>
+                        <small class="text-muted">@n.CreatedAt.ToString("g")</small>
+                    </div>
+                    <div>
+                        @if (!n.IsRead)
+                        {
+                            <button class="btn btn-sm btn-link mark-read" data-id="@n.NotificationId">Mark</button>
+                        }
+                    </div>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.mark-read').forEach(btn=>{
+            btn.addEventListener('click', e=>{
+                var id = e.target.dataset.id;
+                fetch('/Notification/MarkRead?id=' + id, { method: 'POST' })
+                    .then(()=> location.reload());
+            });
+        });
+    </script>
+}

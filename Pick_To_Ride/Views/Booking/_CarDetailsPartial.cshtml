@@ -1,0 +1,32 @@
+﻿@model Pick_To_Ride.Models.Entities.Car
+
+<div class="modal-header">
+    <h5 class="modal-title">@Model.CarName</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.ImageURL" class="img-fluid" />
+        </div>
+        <div class="col-md-6">
+            <p>@Model.Description</p>
+            <p><strong>Per day:</strong> @Model.DailyRate LKR</p>
+            <p><strong>Seats:</strong> @Model.Seats</p>
+            <p><strong>Transmission:</strong> @Model.Transmission</p>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button class="btn btn-primary btn-book-now" data-carid="@Model.CarId">Book</button>
+</div>
+
+@section Scripts {
+    <script>
+        $('.btn-book-now').click(function(){
+          $('.btn-book[data-carid="'+$(this).data('carid')+'"]').click();
+          $('#carDetailsModal').modal('hide');
+        });
+    </script>
+}
