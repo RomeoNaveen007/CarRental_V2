@@ -6,8 +6,6 @@ using Pick_To_Ride.Data;
 using Pick_To_Ride.Models.Entities;
 using Pick_To_Ride.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
-using System.Net.Mail;
 
 namespace Pick_To_Ride.Controllers
 {
@@ -191,7 +189,7 @@ namespace Pick_To_Ride.Controllers
                 StaffId = Guid.NewGuid(),
                 UserId = user.UserId,
                 User = user,
-                Availability = vm.Availability ?? "Available",
+                Availability = vm.Availability,
                 Salary = vm.Salary
             };
             _context.Staffs.Add(staff);
@@ -253,7 +251,7 @@ namespace Pick_To_Ride.Controllers
             staff.User.Address = vm.Address;
             staff.User.City = vm.City;
             staff.User.IsActive = vm.IsActive;
-            staff.Availability = vm.Availability ?? "Available";
+            staff.Availability = vm.Availability;
             staff.Salary = vm.Salary;
 
             // Update profile image if uploaded

@@ -20,6 +20,7 @@ namespace Pick_To_Ride.Models.Entities
         [Required]
         [StringLength(50)]
         public string Status { get; set; } = "Pending"; // Pending, Approved, Rejected
+        public Booking Booking { get; set; }
 
         public DateTime RequestDate { get; set; } = DateTime.UtcNow;
 

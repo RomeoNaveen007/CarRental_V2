@@ -11,7 +11,7 @@ namespace Pick_To_Ride.Models.Entities
         public Guid StaffId { get; set; }
 
         [Required, StringLength(50)]
-        public StaffAvailability Availability { get; set; } = StaffAvailability.Available;
+        public StaffAvailability Availability { get; set; }
 
         [Range(0, double.MaxValue)]
         public decimal Salary { get; set; }
@@ -27,7 +27,6 @@ namespace Pick_To_Ride.Models.Entities
         public bool IsDriver { get; set; } = true;
         public string Email { get; set; }
 
-
-
+        
     }
 }

@@ -4,7 +4,8 @@
     var userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var role = claimsIdentity?.FindFirst(ClaimTypes.Role)?.Value ?? "User";
     var fullName = claimsIdentity?.FindFirst("FullName")?.Value ?? "User";
-    var profileImage = claimsIdentity?.FindFirst("ProfileImage")?.Value ?? "/uploads/profiles/default.png";
+    var profileImage = claimsIdentity?.FindFirst("ProfileImage")?.Value ?? Url.Content("~/uploads/profiles/default.png");
+    var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
 }
 
 <!DOCTYPE html>
@@ -13,6 +14,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - Admin Panel</title>
+
+    <!-- Bootstrap + Custom Styles -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/custom.css" />
@@ -29,56 +32,56 @@
             </div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
+                    <a class="nav-link @(currentController == "Dashboard" ? "active" : "")"
                        asp-controller="Dashboard" asp-action="Index">
                         <i class="bi bi-house-door"></i> Dashboard
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Car" ? "active" : "")"
+                    <a class="nav-link @(currentController == "Car" ? "active" : "")"
                        asp-controller="Car" asp-action="GetAllCars">
                         <i class="bi bi-car-front"></i> Cars
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Users" ? "active" : "")"
+                    <a class="nav-link @(currentController == "Users" ? "active" : "")"
                        asp-controller="Users" asp-action="Index">
                         <i class="bi bi-people"></i> Users
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Booking" ? "active" : "")"
+                    <a class="nav-link @(currentController == "Booking" ? "active" : "")"
                        asp-controller="Booking" asp-action="Index">
                         <i class="bi bi-journal-check"></i> Bookings
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Payment" ? "active" : "")"
+                    <a class="nav-link @(currentController == "Payment" ? "active" : "")"
                        asp-controller="Payment" asp-action="Index">
                         <i class="bi bi-credit-card"></i> Payments
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Reports" ? "active" : "")"
+                    <a class="nav-link @(currentController == "Reports" ? "active" : "")"
                        asp-controller="Reports" asp-action="Index">
                         <i class="bi bi-graph-up"></i> Reports
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AuditLogs" ? "active" : "")"
+                    <a class="nav-link @(currentController == "AuditLogs" ? "active" : "")"
                        asp-controller="AuditLogs" asp-action="Index">
                         <i class="bi bi-clipboard-check"></i> Audit Logs
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Settings" ? "active" : "")"
+                    <a class="nav-link @(currentController == "Settings" ? "active" : "")"
                        asp-controller="Settings" asp-action="Index">
                         <i class="bi bi-gear"></i> Settings
                     </a>
@@ -94,7 +97,7 @@
                     <span class="navbar-brand mb-0 h5">Admin Panel</span>
                     <ul class="navbar-nav d-flex flex-row align-items-center gap-3">
                         <li class="nav-item d-flex align-items-center">
-                            <img src="@profileImage" class="profile-img rounded-circle me-2" />
+                            <img src="@profileImage" class="profile-img rounded-circle me-2" style="width:40px;height:40px;" />
                             <a class="nav-link text-white" asp-controller="Users" asp-action="Details" asp-route-id="@userId">@fullName</a>
                         </li>
                         <li class="nav-item">
@@ -115,7 +118,7 @@
 
             <!-- Footer -->
             <footer class="bg-dark text-center text-white py-2 mt-auto">
-                &copy; 2025 - Pick To Ride
+                &copy; @DateTime.Now.Year - Pick To Ride
             </footer>
         </div>
     </div>
@@ -127,12 +130,11 @@
 
     <script>
         setTimeout(function () {
-            let alerts = document.querySelectorAll('.popup-alert');
-            alerts.forEach(alert => {
+            document.querySelectorAll('.popup-alert').forEach(alert => {
                 let bsAlert = new bootstrap.Alert(alert);
                 bsAlert.close();
             });
-        }, 4000); // auto hide after 4 seconds
+        }, 4000);
     </script>
 </body>
 </html>

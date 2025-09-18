@@ -15,5 +15,7 @@ namespace Pick_To_Ride.Models.Entities
 
         [Required]
         public DateTime HandOverDate { get; set; } = DateTime.UtcNow;
+
+
     }
 }
