@@ -1,0 +1,17 @@
+﻿@model Pick_To_Ride.Models.Entities.Booking
+
+<div class="container mt-4">
+    <h2>Booking Details</h2>
+    <p><b>Booking Code:</b> @Model.BookingCode</p>
+    <p><b>Car:</b> @Model.Car.CarName</p>
+    <p><b>Customer:</b> @Model.Customer.FullName</p>
+    <p><b>Pickup Location:</b> @Model.PickupLocation</p>
+    <p><b>Total:</b> Rs. @Model.TotalAmount</p>
+    <p><b>Status:</b> @Model.Status</p>
+
+    @if (Model.Status == Pick_To_Ride.Models.Entities.BookingStatus.Pending)
+    {
+        <a asp-controller="Payment" asp-action="Pay" asp-route-bookingId="@Model.BookingId" class="btn btn-success">Pay</a>
+        <a asp-controller="Payment" asp-action="Cancel" asp-route-bookingId="@Model.BookingId" class="btn btn-danger">Cancel</a>
+    }
+</div>

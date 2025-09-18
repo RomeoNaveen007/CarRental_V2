@@ -1,0 +1,24 @@
+﻿@model Pick_To_Ride.ViewModels.ReturnViewModel
+
+<div class="container py-4">
+    <div class="card shadow p-4 mx-auto" style="max-width:600px;">
+        <h4>Return Car</h4>
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="CarCondition" class="form-label"></label>
+                <input asp-for="CarCondition" class="form-control" />
+                <span asp-validation-for="CarCondition" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ExtraCharge" class="form-label"></label>
+                <input asp-for="ExtraCharge" class="form-control" />
+                <span asp-validation-for="ExtraCharge" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-success">Return Car</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

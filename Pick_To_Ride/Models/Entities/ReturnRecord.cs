@@ -1,16 +1,22 @@
-﻿namespace Pick_To_Ride.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Pick_To_Ride.Models.Entities
 {
     public class ReturnRecord
     {
+        [Key]
         public Guid ReturnId { get; set; } = Guid.NewGuid();
+
+        [Required]
         public Guid BookingId { get; set; }
 
-        //public Guid UserId { get; set; } // User who is returning the car and the driver and who receive it (get get via bookingId)
+        [Required]
+        public DateTime ReturnDate { get; set; } = DateTime.UtcNow;
 
-        public DateTime ReturnDate { get; set; }
+        [Required]
         public string CarCondition { get; set; }
-        public decimal ExtraCharge { get; set; } // e.g., for damages or late return
 
-
+        [Range(0, double.MaxValue)]
+        public decimal ExtraCharge { get; set; } // For damage or late return
     }
 }

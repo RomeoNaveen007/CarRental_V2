@@ -1,16 +1,28 @@
-﻿namespace Pick_To_Ride.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Pick_To_Ride.Models.Entities
 {
     public class BookingExtentionRequest
     {
-        public Guid Extention { get; set; } = Guid.NewGuid();
+        [Key]
+        public Guid ExtentionId { get; set; } = Guid.NewGuid();
+
+        [Required]
         public Guid BookingId { get; set; }
+
+        [Required]
         public DateTime NewEndDate { get; set; }
+
+        [Required]
+        [StringLength(500)]
         public string Reason { get; set; }
-        public string Status { get; set; } // Pending, Approved, Rejected
-        public DateTime RequestDate { get; set; }
-        // property for who approved or rejected the request
-        public Guid? ReviewedBy { get; set; } // Nullable to allow for pending requests
 
+        [Required]
+        [StringLength(50)]
+        public string Status { get; set; } = "Pending"; // Pending, Approved, Rejected
 
+        public DateTime RequestDate { get; set; } = DateTime.UtcNow;
+
+        public Guid? ReviewedBy { get; set; } // Admin
     }
 }

@@ -1,0 +1,39 @@
+﻿/* site.custom.css */
+.card p {
+    margin-bottom: 0.35rem;
+}
+
+.card .card-title {
+    font-weight: 600;
+}
+
+.navbar .badge {
+    position: relative;
+    top: -8px;
+    left: -6px;
+    font-size: 0.75rem;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+/*---------*/
+
+.container {
+    max-width: 900px;
+}
+
+h2 {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.table th {
+    background: #2c3e50;
+    color: #fff;
+}

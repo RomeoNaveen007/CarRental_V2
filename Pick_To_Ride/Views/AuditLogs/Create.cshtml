@@ -1,0 +1,44 @@
+﻿@model Pick_To_Ride.ViewModels.AuditLogViewModel
+
+@{
+    ViewData["Title"] = "Create Audit Log";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">Create Audit Log</h2>
+
+    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label asp-for="Action" class="form-label"></label>
+            <input asp-for="Action" class="form-control" />
+            <span asp-validation-for="Action" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="EntityName" class="form-label"></label>
+            <input asp-for="EntityName" class="form-control" />
+            <span asp-validation-for="EntityName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="EntityId" class="form-label"></label>
+            <input asp-for="EntityId" class="form-control" />
+            <span asp-validation-for="EntityId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PerformedBy" class="form-label"></label>
+            <input asp-for="PerformedBy" class="form-control" />
+            <span asp-validation-for="PerformedBy" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Details" class="form-label"></label>
+            <textarea asp-for="Details" class="form-control"></textarea>
+            <span asp-validation-for="Details" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

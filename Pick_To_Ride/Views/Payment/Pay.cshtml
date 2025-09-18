@@ -1,0 +1,28 @@
+﻿@model Pick_To_Ride.ViewModels.PaymentViewModel
+@{
+    ViewData["Title"] = "Make Payment";
+}
+
+<link rel="stylesheet" href="~/css/payment.css" />
+
+<div class="payment-container">
+    <h2 class="title">Payment for Booking</h2>
+    <p class="details">@Model.BookingDetails</p>
+
+    <form asp-action="Pay" method="post">
+        <input type="hidden" asp-for="BookingId" />
+
+        <div class="form-group">
+            <label asp-for="Amount"></label>
+            <input asp-for="Amount" class="form-control" readonly />
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn-submit">Pay Now</button>
+        <a asp-action="Cancel" asp-route-bookingId="@Model.BookingId" class="btn-cancel">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -7,99 +7,132 @@
     var profileImage = claimsIdentity?.FindFirst("ProfileImage")?.Value ?? "/uploads/profiles/default.png";
 }
 
-@if (!User.Identity.IsAuthenticated || role != "Admin")
-{
-    <script>window.location.href='@Url.Action("Index", "Home")';</script>
-}
-else
-{
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>@ViewData["Title"] - Admin Panel</title>
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
-    </head>
-    <body class="d-flex flex-column min-vh-100">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+</head>
+<body class="d-flex flex-column min-vh-100">
 
-        <div class="d-flex flex-grow-1">
-            <!-- Sidebar -->
-            <nav id="sidebar" class="sidebar bg-dark text-white flex-shrink-0">
-                <div class="text-center py-3">
-                    <img src="~/uploads/logos/logo.jpeg" alt="Logo" class="sidebar-logo mb-2" />
-                    <h5 class="sidebar-title">Pick To Ride</h5>
+    <div class="d-flex flex-grow-1">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar bg-dark text-white flex-shrink-0">
+            <div class="text-center py-3">
+                <img src="~/uploads/logos/logo.jpeg" alt="Logo" class="sidebar-logo mb-2" />
+                <h5 class="sidebar-title">Pick To Ride</h5>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
+                       asp-controller="Dashboard" asp-action="Index">
+                        <i class="bi bi-house-door"></i> Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Car" ? "active" : "")"
+                       asp-controller="Car" asp-action="GetAllCars">
+                        <i class="bi bi-car-front"></i> Cars
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Users" ? "active" : "")"
+                       asp-controller="Users" asp-action="Index">
+                        <i class="bi bi-people"></i> Users
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Booking" ? "active" : "")"
+                       asp-controller="Booking" asp-action="Index">
+                        <i class="bi bi-journal-check"></i> Bookings
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Payment" ? "active" : "")"
+                       asp-controller="Payment" asp-action="Index">
+                        <i class="bi bi-credit-card"></i> Payments
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Reports" ? "active" : "")"
+                       asp-controller="Reports" asp-action="Index">
+                        <i class="bi bi-graph-up"></i> Reports
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AuditLogs" ? "active" : "")"
+                       asp-controller="AuditLogs" asp-action="Index">
+                        <i class="bi bi-clipboard-check"></i> Audit Logs
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Settings" ? "active" : "")"
+                       asp-controller="Settings" asp-action="Index">
+                        <i class="bi bi-gear"></i> Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main content -->
+        <div class="flex-grow-1 d-flex flex-column">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand bg-dark navbar-dark shadow-sm px-3">
+                <div class="d-flex w-100 justify-content-between">
+                    <span class="navbar-brand mb-0 h5">Admin Panel</span>
+                    <ul class="navbar-nav d-flex flex-row align-items-center gap-3">
+                        <li class="nav-item d-flex align-items-center">
+                            <img src="@profileImage" class="profile-img rounded-circle me-2" />
+                            <a class="nav-link text-white" asp-controller="Users" asp-action="Details" asp-route-id="@userId">@fullName</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" asp-controller="Account" asp-action="Logout">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Car" asp-action="GetAllCars"><i class="bi bi-car-front"></i> Cars</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Users" asp-action="Index"><i class="bi bi-people"></i> Users</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="collapse" href="#staffSubmenu" role="button" aria-expanded="false">
-                            <i class="bi bi-person-badge"></i> Staff Management <i class="bi bi-chevron-down float-end"></i>
-                        </a>
-                        <div class="collapse ps-3" id="staffSubmenu">
-                            <ul class="nav flex-column">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Staff" asp-action="Index" asp-route-role="Staff"><i class="bi bi-people"></i> General Staff</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Staff" asp-action="Index" asp-route-role="Driver"><i class="bi bi-truck"></i> Drivers</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="AuditLogs" asp-action="Index"><i class="bi bi-clipboard-check"></i> Audit Logs</a>
-                    </li>
-                </ul>
             </nav>
 
-            <!-- Main content -->
-            <div class="flex-grow-1 d-flex flex-column">
-                <!-- Navbar -->
-                <nav class="navbar navbar-expand bg-dark navbar-dark shadow-sm px-3">
-                    <div class="d-flex w-100 justify-content-between">
-                        <span class="navbar-brand mb-0 h5">Admin Panel</span>
-                        <ul class="navbar-nav d-flex flex-row align-items-center gap-3">
-                            <li class="nav-item d-flex align-items-center">
-                                <img src="@profileImage" class="profile-img rounded-circle me-2" />
-                                <a class="nav-link text-white" asp-controller="Users" asp-action="Details" asp-route-id="@userId">@fullName</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-danger" asp-controller="Account" asp-action="Logout">
-                                    <i class="bi bi-box-arrow-right"></i> Logout
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+            <partial name="_Alerts" />
 
-                <!-- Page content -->
-                <main class="flex-grow-1 p-4">
-                    @RenderBody()
-                </main>
+            <!-- Page content -->
+            <main class="flex-grow-1 p-4">
+                @RenderBody()
+            </main>
 
-                <!-- Footer -->
-                <footer class="bg-dark text-center text-white py-2 mt-auto">
-                    &copy; 2025 - Car_Rental_System_01
-                </footer>
-            </div>
+            <!-- Footer -->
+            <footer class="bg-dark text-center text-white py-2 mt-auto">
+                &copy; 2025 - Pick To Ride
+            </footer>
         </div>
+    </div>
 
-        <!-- Scripts -->
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js"></script>
-        @await RenderSectionAsync("Scripts", required: false)
-    </body>
-    </html>
-}
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        setTimeout(function () {
+            let alerts = document.querySelectorAll('.popup-alert');
+            alerts.forEach(alert => {
+                let bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 4000); // auto hide after 4 seconds
+    </script>
+</body>
+</html>

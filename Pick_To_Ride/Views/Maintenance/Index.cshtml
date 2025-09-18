@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Pick_To_Ride.Models.Entities.Maintenence>
+<div class="container py-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Maintenance</h3>
+        <a class="btn btn-primary" asp-action="Create">Create</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead><tr><th>Car</th><th>Type</th><th>Start</th><th>End</th><th>Status</th><th>Cost</th><th>Actions</th></tr></thead>
+        <tbody>
+            @foreach (var m in Model)
+            {
+                <tr>
+                    <td>@m.CarId</td> <!-- optionally fetch car name -->
+                    <td>@m.MaintainenceType</td>
+                    <td>@m.StartDate.ToString("yyyy-MM-dd")</td>
+                    <td>@(m.EndDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                    <td>@m.Status</td>
+                    <td>@m.Cost</td>
+                    <td>
+                        <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@m.MaintenenceId">Edit</a>
+                        <form asp-action="Delete" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@m.MaintenenceId" />
+                            <button class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Pick_To_Ride.Models.Entities.BookingExtentionRequest>
+
+<div class="container py-4">
+    <h4>Pending Booking Extension Requests</h4>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Booking Code</th>
+                <th>Car</th>
+                <th>Requested New End Date</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var req in Model)
+            {
+                <tr>
+                    <td>@req.Booking.BookingCode</td>
+                    <td>@req.Booking.Car.CarName</td>
+                    <td>@req.NewEndDate:d</td>
+                    <td>@req.Reason</td>
+                    <td>@req.Status</td>
+                    <td>
+                        <form asp-action="Review" method="post" class="d-inline">
+                            <input type="hidden" name="extensionId" value="@req.ExtentionId" />
+                            <button type="submit" name="approve" value="true" class="btn btn-success btn-sm">Approve</button>
+                            <button type="submit" name="approve" value="false" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
