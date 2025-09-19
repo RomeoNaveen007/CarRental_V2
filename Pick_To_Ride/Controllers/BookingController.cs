@@ -12,7 +12,7 @@ namespace Pick_To_Ride.Controllers
     public class BookingController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
+
         public BookingController(ApplicationDbContext context)
         {
             _context = context;
@@ -108,4 +108,5 @@ namespace Pick_To_Ride.Controllers
             return View(booking);
         }
     }
+    
 }

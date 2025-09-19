@@ -4,7 +4,7 @@
     var userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var role = claimsIdentity?.FindFirst(ClaimTypes.Role)?.Value ?? "User";
     var fullName = claimsIdentity?.FindFirst("FullName")?.Value ?? "User";
-    var profileImage = claimsIdentity?.FindFirst("ProfileImage")?.Value ?? Url.Content("~/uploads/profiles/default.png");
+    var profileImage = claimsIdentity?.FindFirst("ProfileImage")?.Value ?? Url.Content("~/uploads/profiles/obito.jpg");
     var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
 }
 

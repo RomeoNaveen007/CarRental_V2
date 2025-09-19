@@ -1,45 +1,66 @@
-﻿@{
-    Layout = "_Layout";
-    var model = (dynamic)Model;
+﻿@model dynamic
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="container py-4">
+<div class="container mt-4">
+    <h2 class="mb-4">Admin Dashboard</h2>
     <div class="row g-3">
-        <div class="col-md-3">
-            <div class="card p-3">
-                <h6>Total Bookings</h6>
-                <h3>@@model?.TotalBookings ?? 0</h3>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3">
-                <h6>Total Revenue (LKR)</h6>
-                <h3>@String.Format("{0:N0}", model?.TotalRevenue ?? 0)</h3>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3">
-                <h6>Active Cars</h6>
-                <h3>@@model?.ActiveCars ?? 0</h3>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3">
-                <h6>Drivers On Duty</h6>
-                <h3>@@model?.DriversOnDuty ?? 0</h3>
-            </div>
-        </div>
-    </div>
 
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card p-3">
-                <h5>Bookings (Last 7 days)</h5>
-                <canvas id="bookingsChart" height="100"></canvas>
+        <!-- Bookings -->
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5>Total Bookings</h5>
+                    <h2>@(Model?.TotalBookings ?? 0)</h2>
+                </div>
             </div>
         </div>
+
+        <!-- Revenue -->
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5>Total Revenue</h5>
+                    <h2>LKR @(Model?.TotalRevenue ?? 0)</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Cars -->
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5>Active Cars</h5>
+                    <h2>@(Model?.ActiveCars ?? 0)</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drivers -->
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5>Drivers On Duty</h5>
+                    <h2>@(Model?.DriversOnDuty ?? 0)</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Chart -->
+        <div class="row mt-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5>Bookings (Last 7 days)</h5>
+                    <canvas id="bookingsChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
+
 
 @section Scripts{
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

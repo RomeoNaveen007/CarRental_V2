@@ -18,6 +18,24 @@ namespace Pick_To_Ride.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        // 🔹 Catalog page for customers (flex cards with Book + Details)
+        public async Task<IActionResult> Catalog()
+        {
+            try
+            {
+                var cars = await _context.Cars
+                    .Where(c => c.Status == "Available")
+                    .ToListAsync();
+
+                return View(cars);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error loading car catalog: " + ex.Message;
+                return RedirectToAction(nameof(GetAllCars));
+            }
+        }
+
         // 🔹 Get All Cars
         public async Task<IActionResult> GetAllCars()
         {

@@ -37,3 +37,27 @@ h2 {
     background: #2c3e50;
     color: #fff;
 }
+
+        /* Custom styles for car catalog cards */
+.car-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.12s ease-in-out, box-shadow 0.12s ease-in-out;
+}
+
+    .car-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+.profile-img {
+    object-fit: cover;
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+    .car-card img {
+        height: 140px !important;
+    }
+}
+
