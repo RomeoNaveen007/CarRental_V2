@@ -12,7 +12,7 @@ using Pick_To_Ride.Data;
 namespace Pick_To_Ride.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250918125757_InitialMigration")]
+    [Migration("20250919001624_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

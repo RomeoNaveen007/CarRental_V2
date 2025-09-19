@@ -57,7 +57,7 @@ namespace Pick_To_Ride.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim("FullName", user.FullName ?? user.UserName),
-                new Claim("ProfileImage", user.ProfileImage ?? "/uploads/profiles/default.png"),
+                new Claim("ProfileImage", user.ProfileImage ?? "/uploads/profiles/obito.jpg"),
                 new Claim(ClaimTypes.Role, user.Role ?? "User")
             };
 
@@ -66,7 +66,7 @@ namespace Pick_To_Ride.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: /Account/Logout
