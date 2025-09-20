@@ -40,5 +40,6 @@ namespace Pick_To_Ride.Models.Entities
 
         [Required]
         public string Category { get; set; }
+        public bool IsActive { get;  set; } = true ;
     }
 }

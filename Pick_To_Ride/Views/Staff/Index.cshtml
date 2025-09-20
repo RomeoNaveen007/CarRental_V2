@@ -8,8 +8,20 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>@ViewData["Title"]</h2>
         <div>
-            <a class="btn btn-success me-2" asp-action="Create" asp-route-role="Staff">+ Add Staff</a>
-            <a class="btn btn-primary" asp-action="Create" asp-route-role="Driver">+ Add Driver</a>
+            @if (role == "Staff")
+            {
+                <a class="btn btn-success" asp-action="Create" asp-route-role="Staff">+ Add Staff</a>
+            }
+            else if (role == "Driver")
+            {
+                <a class="btn btn-primary" asp-action="Create" asp-route-role="Driver">+ Add Driver</a>
+            }
+            else
+            {
+                <!-- Optional: show both if no filter -->
+                <a class="btn btn-success me-2" asp-action="Create" asp-route-role="Staff">+ Add Staff</a>
+                <a class="btn btn-primary" asp-action="Create" asp-route-role="Driver">+ Add Driver</a>
+            }
         </div>
     </div>
 

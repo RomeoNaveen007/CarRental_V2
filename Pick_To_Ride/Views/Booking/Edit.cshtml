@@ -1,14 +1,16 @@
 ﻿@model Pick_To_Ride.ViewModels.BookingViewModel
 @{
-    ViewData["Title"] = "Create Booking";
+    ViewData["Title"] = "Edit Booking";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="BookingId" />
+
     <div class="mb-3">
         <label asp-for="CarId" class="form-label"></label>
-        <select asp-for="CarId" class="form-select" asp-items="@(new SelectList(Model.AvailableCars, "CarId", "Name"))">
+        <select asp-for="CarId" class="form-select" asp-items="@(new SelectList(Model.AvailableCars, "CarId", "CarName"))">
             <option value="">Select a car</option>
         </select>
         <span asp-validation-for="CarId" class="text-danger"></span>
@@ -50,7 +52,7 @@
         <span asp-validation-for="TotalAmount" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-success">Create Booking</button>
+    <button type="submit" class="btn btn-primary">Update Booking</button>
 </form>
 
 @section Scripts {

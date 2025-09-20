@@ -45,20 +45,20 @@ public class HandOverController : BaseController
             }
 
             // Parse CustomerId safely
-            if (!Guid.TryParse(booking.CustomerId, out Guid customerId))
-            { 
-                ModelState.AddModelError(string.Empty, "Invalid customer ID in booking.");
-                return View(model);
-            }
+            //if (!Guid.TryParse(booking.CustomerId, out Guid customerId))
+            //{ 
+            //    ModelState.AddModelError(string.Empty, "Invalid customer ID in booking.");
+            //    return View(model);
+            //}
 
-            // Create HandOver record
-            var handover = new HandOverRecord 
-            { BookingId = model.BookingId, 
-                UserId = Guid.Parse(booking.CustomerId), 
-                HandOverDate = DateTime.UtcNow 
-            };
+            //// Create HandOver record
+            //var handover = new HandOverRecord 
+            //{ BookingId = model.BookingId, 
+            //    UserId = Guid.Parse(booking.CustomerId), 
+            //    HandOverDate = DateTime.UtcNow 
+            //};
 
-            _context.HandOverRecords.Add(handover);
+          //  _context.HandOverRecords.Add(handover);
 
             // Update Car status
             var car = await _context.Cars.FindAsync(booking.CarId);

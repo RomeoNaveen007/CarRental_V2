@@ -73,12 +73,13 @@
                 <div class="col-md-6">
                     <label asp-for="Status" class="form-label fw-bold"></label>
                     <select asp-for="Status" class="form-select">
-                        <option value="Available" selected="@Model.Status == " Available"">Available</option>
-                        <option value="Unavailable" selected="@Model.Status == " Unavailable"">Unavailable</option>
-                        <option value="Maintenance" selected="@Model.Status == " Maintenance"">Maintenance</option>
+                        <option value="Available">Available</option>
+                        <option value="Unavailable">Unavailable</option>
+                        <option value="Maintenance">Maintenance</option>
                     </select>
                     <span asp-validation-for="Status" class="text-danger"></span>
                 </div>
+
 
                 <!-- Category -->
                 <div class="col-md-6">

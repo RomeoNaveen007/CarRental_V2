@@ -23,9 +23,7 @@ namespace Pick_To_Ride.Models.Entities
         [ForeignKey(nameof(UserId))]
         public User User { get; set; } // navigation property
 
-        public string FullName { get; set; }
         public bool IsDriver { get; set; } = true;
-        public string Email { get; set; }
 
         
     }
