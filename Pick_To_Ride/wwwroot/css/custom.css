@@ -27,6 +27,21 @@
     border-radius: 50%;
 }
 
+.sidebar a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+    .sidebar a.active, .sidebar a:hover {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+
 /* Profile image */
 .profile-img {
     width: 40px;

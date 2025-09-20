@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35919.96 d17.13
+VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pick_To_Ride", "Pick_To_Ride\Pick_To_Ride.csproj", "{C4C32D1C-93BD-4D5F-867C-49273A92D644}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pick_To_Ride", "Pick_To_Ride\Pick_To_Ride.csproj", "{C4C32D1C-93BD-4D5F-867C-49273A92D644}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

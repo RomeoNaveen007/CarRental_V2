@@ -94,7 +94,7 @@ namespace Pick_To_Ride
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Account}/{action=Login}/{id?}");
+                pattern: "{controller=Customer}/{action=Index}/{id?}");
 
             app.Run();
         }
