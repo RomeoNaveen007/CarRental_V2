@@ -1,6 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Car Rental - Home";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
 }
+
 
 <div class="container-fluid">
   <div class="row">
@@ -22,7 +24,7 @@
               <h1 class="display-2 fw-bold">Pick to Ride </h1>
                     <h1 class="display- fw-bold">Rental Service</h1>
               <p class="lead mb-4">Book your dream car anytime, anywhere with just a few clicks!</p>
-              <a asp-controller="Customer" asp-action="ViewCars" 
+              <a asp-controller="Customer" asp-action="CarDetails" 
                  class="btn btn-lg btn-primary shadow-lg me-2">View Car</a>
               <a asp-controller="Account" asp-action="Register" 
                  class="btn btn-lg btn-outline-light shadow-lg">Register</a>
@@ -125,6 +127,8 @@
               <p>Email: picktoride.p2r@gmail.com | Phone: 0770589633</p>
           </div>
       </section>
+
+      
 
     </div>
 
