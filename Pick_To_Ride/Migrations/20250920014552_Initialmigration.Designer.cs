@@ -12,8 +12,8 @@ using Pick_To_Ride.Data;
 namespace Pick_To_Ride.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250919001624_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250920014552_Initialmigration")]
+    partial class Initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,11 +80,7 @@ namespace Pick_To_Ride.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CustomerUserId")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("DriverId")
@@ -116,7 +112,7 @@ namespace Pick_To_Ride.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.HasIndex("CustomerUserId");
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("DriverId");
 
@@ -192,6 +188,9 @@ namespace Pick_To_Ride.Migrations
 
                     b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("RegistrationNumber")
                         .IsRequired()
@@ -291,6 +290,11 @@ namespace Pick_To_Ride.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -364,14 +368,6 @@ namespace Pick_To_Ride.Migrations
                     b.Property<int>("Availability")
                         .HasMaxLength(50)
                         .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDriver")
                         .HasColumnType("bit");
@@ -464,7 +460,7 @@ namespace Pick_To_Ride.Migrations
 
                     b.HasOne("Pick_To_Ride.Models.Entities.User", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerUserId")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

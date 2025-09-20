@@ -12,13 +12,16 @@ namespace Pick_To_Ride.Models.Entities
 
         [Required(ErrorMessage = "Please select a car.")]
         public Guid CarId { get; set; }
+        [ForeignKey(nameof(CarId))]
         public Car Car { get; set; }
 
         [Required(ErrorMessage = "Customer is required.")]
-        public string CustomerId { get; set; }
+        public Guid CustomerId { get; set; }   // must match User.UserId
+        [ForeignKey(nameof(CustomerId))]
         public User Customer { get; set; }
 
-        public Guid? DriverId { get; set; }   // Optional staff driver
+        public Guid? DriverId { get; set; }   // Optional StaffId
+        [ForeignKey(nameof(DriverId))]
         public Staff Driver { get; set; }
 
         [Required(ErrorMessage = "Start date is required.")]
@@ -57,5 +60,4 @@ namespace Pick_To_Ride.Models.Entities
         Cancelled,
         Completed
     }
-
 }

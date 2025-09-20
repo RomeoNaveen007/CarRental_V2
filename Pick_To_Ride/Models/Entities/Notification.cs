@@ -7,12 +7,17 @@ namespace Pick_To_Ride.Models.Entities
         [Key]
         public Guid NotificationId { get; set; } = Guid.NewGuid();
 
-        public Guid UserId { get; set; } // driver user id or admin user id
+        [Required]
+        public Guid UserId { get; set; }
 
+        [Required, StringLength(250)]
+        public string Title { get; set; }
+
+        [Required]
         public string Message { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
         public bool IsRead { get; set; } = false;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

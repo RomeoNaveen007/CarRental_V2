@@ -5,12 +5,14 @@
 }
 
 <div class="container py-4">
-    <div class="card shadow-lg p-4 mx-auto" style="max-width: 700px; backdrop-filter: blur(8px); background: rgba(255,255,255,0.2);">
+    <div class="card shadow-lg p-4 mx-auto" style="max-width: 700px;">
         <h3 class="text-center mb-4">@ViewData["Title"]</h3>
 
         <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="StaffId" />
+            <input type="hidden" asp-for="UserId" />
             <input type="hidden" asp-for="Role" />
+            <input type="hidden" asp-for="Availability" />
 
             <!-- First Name / Last Name -->
             <div class="row mb-3">
@@ -68,21 +70,26 @@
                 </div>
             </div>
 
-            <!-- Availability / Salary -->
+            <!-- Salary -->
             <div class="row mb-3">
-                <div class="col-md-6">
-                    <label asp-for="Availability" class="form-label fw-bold"></label>
-                    <select asp-for="Availability" class="form-select">
-                        <option value="Available" selected="@Model.Availability == " Available"">Available</option>
-                        <option value="On Duty" selected="@Model.Availability == " On Duty"">On Duty</option>
-                        <option value="Leave" selected="@Model.Availability == " Leave"">Leave</option>
-                    </select>
-                    <span asp-validation-for="Availability" class="text-danger"></span>
-                </div>
                 <div class="col-md-6">
                     <label asp-for="Salary" class="form-label fw-bold"></label>
                     <input asp-for="Salary" class="form-control" />
                     <span asp-validation-for="Salary" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Address / City -->
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <label asp-for="Address" class="form-label fw-bold"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="City" class="form-label fw-bold"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
                 </div>
             </div>
 

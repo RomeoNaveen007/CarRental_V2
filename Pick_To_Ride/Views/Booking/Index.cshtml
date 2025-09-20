@@ -1,36 +1,65 @@
 ﻿@model IEnumerable<Pick_To_Ride.Models.Entities.Booking>
+@{
+    ViewData["Title"] = "My Bookings";
+}
 
-<div class="container mt-4">
-    <h2 class="mb-3">Bookings</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Booking Code</th>
-                <th>Car</th>
-                <th>Customer</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Status</th>
-                <th>Total</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var booking in Model)
-            {
-                <tr>
-                    <td>@booking.BookingCode</td>
-                    <td>@booking.Car.CarName</td>
-                    <td>@booking.Customer.FullName</td>
-                    <td>@booking.StartDate.ToShortDateString()</td>
-                    <td>@booking.EndDate.ToShortDateString()</td>
-                    <td>@booking.Status</td>
-                    <td>@booking.TotalAmount</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@booking.BookingId" class="btn btn-sm btn-primary">Details</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>@ViewData["Title"]</h2>
+    <a class="btn btn-primary" asp-controller="Car" asp-action="Catalog">New Booking</a> <!-- Right-aligned button -->
 </div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Booking Code</th>
+            <th>Car</th>
+            <th>Driver</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>@booking.BookingCode</td>
+                <td>@booking.Car?.CarName</td>
+                <td>@booking.Driver?.User?.FullName ?? "N/A"</td>
+                <td>@booking.StartDate.ToString("yyyy-MM-dd")</td>
+                <td>@booking.EndDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    @switch (booking.Status)
+                    {
+                        case Pick_To_Ride.Models.Entities.BookingStatus.Pending:
+                            <span class="badge bg-warning">Pending</span>
+                            ; break;
+                        case Pick_To_Ride.Models.Entities.BookingStatus.Booked:
+                            <span class="badge bg-success">Booked</span>
+                            ; break;
+                        case Pick_To_Ride.Models.Entities.BookingStatus.Cancelled:
+                            <span class="badge bg-danger">Cancelled</span>
+                            ; break;
+                        case Pick_To_Ride.Models.Entities.BookingStatus.Completed:
+                            <span class="badge bg-primary">Completed</span>
+                            ; break;
+                    }
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@booking.BookingId">View</a>
+                    @if (booking.Status != Pick_To_Ride.Models.Entities.BookingStatus.Cancelled)
+                    {
+                        <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@booking.BookingId">Edit</a>
+                        <a class="btn btn-sm btn-danger" asp-action="Cancel" asp-route-id="@booking.BookingId">Cancel</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

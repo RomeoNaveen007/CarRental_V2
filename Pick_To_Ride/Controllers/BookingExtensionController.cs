@@ -72,7 +72,7 @@ public class BookingExtensionController : BaseController
                 // Notify customer
                 var notify = new Notification
                 {
-                    UserId = Guid.Parse(booking.CustomerId),
+                    UserId =booking.CustomerId,
                     Message = $"Your booking {booking.BookingCode} has been automatically extended to {booking.EndDate:d}."
                 };
                 _context.Notifications.Add(notify);
@@ -130,7 +130,7 @@ public class BookingExtensionController : BaseController
 
                 var notify = new Notification
                 {
-                    UserId = Guid.Parse(booking.CustomerId),
+                    UserId = booking.CustomerId,
                     Message = $"Your booking {booking.BookingCode} has been approved for extension to {booking.EndDate:d}."
                 };
                 _context.Notifications.Add(notify);

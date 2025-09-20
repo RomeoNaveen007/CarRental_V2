@@ -10,7 +10,7 @@ namespace Pick_To_Ride.ViewModels
         public Guid? StaffId { get; set; }
 
         [Required(ErrorMessage = "Availability is required")]
-        public StaffAvailability Availability { get; set; } = StaffAvailability.Available;
+        public StaffAvailability? Availability { get; set; } = StaffAvailability.Available;
 
         [Range(0, double.MaxValue, ErrorMessage = "Salary must be non-negative")]
         public decimal Salary { get; set; }
@@ -55,8 +55,9 @@ namespace Pick_To_Ride.ViewModels
         public string Role { get; set; } = "Driver"; // default role
         public bool IsActive { get; set; } = true;
 
+        [Required(ErrorMessage = "Address is required")]
         [StringLength(250)]
-        public string? Address { get; set; }
+        public string Address { get; set; }
 
         [StringLength(100)]
         public string? City { get; set; }
