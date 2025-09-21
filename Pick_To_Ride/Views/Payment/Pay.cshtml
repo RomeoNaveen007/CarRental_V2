@@ -1,11 +1,46 @@
-﻿@{
+﻿@model Pick_To_Ride.Models.Entities.Booking
+@{
     ViewData["Title"] = "Payment";
 }
 
-<div class="container py-5">
-    <div class="text-center">
-        <h2 class="text-success mb-4">Payment Gateway</h2>
-        <p>This is a demo payment. When you click "Pay Now", your booking will be confirmed automatically.</p>
-        <a asp-action="Pay" asp-route-id="@Context.Request.Query["id"]" class="btn btn-primary btn-lg">Pay Now</a>
+<div class="zoom-card">
+    <h2 class="text-center mb-4">💳 Payment for Booking</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="card mb-4 p-3 shadow-sm">
+        <h5>Booking Details</h5>
+        <p><b>Booking Code:</b> @Model.BookingCode</p>
+        <p><b>Car:</b> @Model.CarId</p>
+        <p><b>From:</b> @Model.StartDate.ToShortDateString() → <b>To:</b> @Model.EndDate.ToShortDateString()</p>
     </div>
+
+    <form asp-action="Pay" method="post">
+        <input type="hidden" name="bookingId" value="@Model.BookingId" />
+
+        <div class="form-group mb-3">
+            <label for="CardNumber">Card Number</label>
+            <input type="text" id="CardNumber" name="CardNumber" class="form-control" placeholder="1234 5678 9012 3456" required />
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="Expiry">Expiry Date</label>
+                <input type="text" id="Expiry" name="Expiry" class="form-control" placeholder="MM/YY" required />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="CVC">CVC</label>
+                <input type="text" id="CVC" name="CVC" class="form-control" placeholder="123" required />
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Confirm & Pay</button>
+    </form>
 </div>

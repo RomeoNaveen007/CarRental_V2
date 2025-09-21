@@ -49,20 +49,7 @@
     object-fit: cover;
 }
 
-/* Cards */
-.card-custom {
-    border-left: 5px solid #2980B9;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-    padding: 1rem;
-    border-radius: 10px;
-    background: #fff;
-}
 
-    .card-custom:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    }
 
 /* Form styling */
 form.card, .form-container {
@@ -142,3 +129,88 @@ form .btn {
         height: 30px;
     }
 }
+
+
+/* === Global Custom Styles for Booking/Payment === */
+
+/* Alert messages with zoom-in animation */
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    animation: zoomIn 1.5s ease;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+/* Zoom-in animation */
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Card layout */
+.custom-card {
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    margin-bottom: 25px;
+    background: #fff;
+    transition: transform 0.3s ease;
+}
+
+    .custom-card:hover {
+        transform: translateY(-3px);
+    }
+
+/* Buttons */
+.btn-custom {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.btn-primary-custom {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+}
+
+    .btn-primary-custom:hover {
+        background-color: #0056b3;
+    }
+
+.btn-danger-custom {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+}
+
+    .btn-danger-custom:hover {
+        background-color: #a71d2a;
+    }

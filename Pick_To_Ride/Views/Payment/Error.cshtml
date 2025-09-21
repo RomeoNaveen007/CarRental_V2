@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Payment Error";
+}
+
+<link rel="stylesheet" href="~/css/custom.css" />
+
+<div class="container mt-5 text-center">
+    @await Html.PartialAsync("_Message")
+
+    <div class="custom-card">
+        <h2 class="text-danger">⚠️ Payment Failed</h2>
+        <p>Something went wrong while processing your payment. Please try again or contact support.</p>
+        <a asp-controller="Booking" asp-action="Index" class="btn btn-danger-custom btn-custom">Back to Bookings</a>
+    </div>
+</div>

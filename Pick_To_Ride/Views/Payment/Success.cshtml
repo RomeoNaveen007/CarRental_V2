@@ -1,17 +1,15 @@
-﻿@model Pick_To_Ride.Models.Entities.Booking
-@{
-    ViewBag.Title = "Booking Success";
+﻿@{
+    ViewData["Title"] = "Payment Success";
 }
 
-<div class="container py-4">
-    <h2>Booking Confirmed</h2>
-    <div class="card p-3">
-        <h4>Booking Code: @Model.BookingCode</h4>
-        <p><strong>Car:</strong> @Model.Car.CarName</p>
-        <p><strong>Start:</strong> @Model.StartDate:yyyy-MM-dd</p>
-        <p><strong>End:</strong> @Model.EndDate:yyyy-MM-dd</p>
-        <p><strong>Pickup Location:</strong> @(Model.PickupLocation ?? "N/A")</p>
-        <p><strong>Amount Paid:</strong> LKR @Model.TotalAmount</p>
-        <p><strong>Status:</strong> @Model.Status</p>
+<link rel="stylesheet" href="~/css/custom.css" />
+
+<div class="container mt-5 text-center">
+    @await Html.PartialAsync("_Message")
+
+    <div class="custom-card">
+        <h2 class="text-success">🎉 Payment Successful!</h2>
+        <p>Your booking has been confirmed. Please check your email for confirmation details.</p>
+        <a asp-controller="Booking" asp-action="Index" class="btn btn-primary-custom btn-custom">Back to Bookings</a>
     </div>
 </div>

@@ -10,9 +10,12 @@ namespace Pick_To_Ride.ViewModels
 
         [Required(ErrorMessage = "Please select a car.")]
         public Guid CarId { get; set; }
+        public string SelectedCarName { get; set; }
+
 
         // Will be set on server from authenticated user if not provided
         public Guid CustomerId { get; set; }
+
 
         // Optional driver
         public Guid? DriverId { get; set; }
@@ -26,7 +29,6 @@ namespace Pick_To_Ride.ViewModels
         [DateGreaterThan("StartDate", ErrorMessage = "End date must be after start date.")]
         public DateTime EndDate { get; set; }
 
-        [Required]
         [StringLength(6)]
         public string BookingCode { get; set; }
 
