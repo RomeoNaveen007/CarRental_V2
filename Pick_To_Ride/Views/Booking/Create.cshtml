@@ -3,55 +3,67 @@
     ViewData["Title"] = "Create Booking";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4">
+    <h2 class="mb-3 text-primary">@ViewData["Title"]</h2>
 
-<form asp-action="Create" method="post">
-    <div class="mb-3">
-        <label asp-for="CarId" class="form-label"></label>
-        <select asp-for="CarId" class="form-select" asp-items="@(new SelectList(Model.AvailableCars, "CarId", "Name"))">
-            <option value="">Select a car</option>
-        </select>
-        <span asp-validation-for="CarId" class="text-danger"></span>
-    </div>
+    <form asp-action="Create" method="post" class="shadow p-4 rounded bg-light">
+        <!-- Car Dropdown -->
+        <div class="mb-3">
+            <label asp-for="CarId" class="form-label"></label>
+            <select asp-for="CarId" class="form-select"
+                    asp-items="@(new SelectList(Model.AvailableCars, "CarId", "CarName"))">
+                <option value="">Select a car</option>
+            </select>
+            <span asp-validation-for="CarId" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3 form-check">
-        <input type="checkbox" asp-for="DriverRequired" class="form-check-input" id="driverRequiredCheck" />
-        <label class="form-check-label" for="driverRequiredCheck">Driver Required</label>
-    </div>
+        <!-- Driver required checkbox -->
+        <div class="mb-3 form-check">
+            <input type="checkbox" asp-for="DriverRequired" class="form-check-input" id="driverRequiredCheck" />
+            <label class="form-check-label" for="driverRequiredCheck">Driver Required</label>
+        </div>
 
-    <div class="mb-3" id="driverDiv" style="display:@(Model.DriverRequired ? "block" : "none")">
-        <label asp-for="DriverId" class="form-label"></label>
-        <select asp-for="DriverId" class="form-select" asp-items="@(new SelectList(Model.AvailableDrivers, "StaffId", "User.FullName"))">
-            <option value="">Select a driver</option>
-        </select>
-    </div>
+        <!-- Driver selection -->
+        <div class="mb-3" id="driverDiv" style="display:@(Model.DriverRequired ? "block" : "none")">
+            <label asp-for="DriverId" class="form-label"></label>
+            <select asp-for="DriverId" class="form-select"
+                    asp-items="@(new SelectList(Model.AvailableDrivers, "StaffId", "User.FullName"))">
+                <option value="">Select a driver</option>
+            </select>
+        </div>
 
-    <div class="mb-3" id="pickupDiv" style="display:@(Model.DriverRequired ? "block" : "none")">
-        <label asp-for="PickupLocation" class="form-label"></label>
-        <input asp-for="PickupLocation" class="form-control" />
-        <span asp-validation-for="PickupLocation" class="text-danger"></span>
-    </div>
+        <!-- Pickup location -->
+        <div class="mb-3" id="pickupDiv" style="display:@(Model.DriverRequired ? "block" : "none")">
+            <label asp-for="PickupLocation" class="form-label"></label>
+            <input asp-for="PickupLocation" class="form-control" placeholder="Enter pickup location" />
+            <span asp-validation-for="PickupLocation" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="StartDate" class="form-label"></label>
-        <input asp-for="StartDate" class="form-control" type="date" />
-        <span asp-validation-for="StartDate" class="text-danger"></span>
-    </div>
+        <!-- Dates -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="StartDate" class="form-label"></label>
+                <input asp-for="StartDate" class="form-control" type="date" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="EndDate" class="form-label"></label>
+                <input asp-for="EndDate" class="form-control" type="date" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="EndDate" class="form-label"></label>
-        <input asp-for="EndDate" class="form-control" type="date" />
-        <span asp-validation-for="EndDate" class="text-danger"></span>
-    </div>
+        <!-- Total Amount -->
+        <div class="mb-3">
+            <label asp-for="TotalAmount" class="form-label"></label>
+            <input asp-for="TotalAmount" class="form-control" type="number" step="0.01" placeholder="Enter amount" />
+            <span asp-validation-for="TotalAmount" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="TotalAmount" class="form-label"></label>
-        <input asp-for="TotalAmount" class="form-control" type="number" step="0.01" />
-        <span asp-validation-for="TotalAmount" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">Create Booking</button>
-</form>
+        <button type="submit" class="btn btn-success">Create Booking</button>
+        <a asp-controller="Car" asp-action="Catalog" class="btn btn-outline-secondary ms-2">Cancel</a>
+    </form>
+</div>
 
 @section Scripts {
     <script>

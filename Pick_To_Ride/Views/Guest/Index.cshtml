@@ -4,6 +4,72 @@
 }
 
 
+
+<style>.card img {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+.card img:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
+}
+
+
+    /* ----- FEATURES SECTION ----- */
+.features {
+    padding: 80px 0;
+    text-align: center;
+}
+.feature-card {
+    transition: transform 1s, box-shadow 0.5s;
+    border-radius: 15px;
+    padding: 40px 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,5);
+    background: #2C2A2A;
+    margin:20px;
+}
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow:0 8px 25px rgba(0,0,0,0.2);
+}
+.feature-card i {
+    font-size:5rem;
+    color: #FFFFFF;
+    margin-bottom:15px;
+}.feature-card h4 {
+    color: #FFFFFF;
+    
+}.feature-card p {
+    color: #FFFFFF;
+  
+}
+
+@@keyframes fillStars {
+    0% { width:0%; }
+    100% { width:100%; }
+}
+
+    /* Keyframes for fill animation */
+    @@keyframes starFill {
+        0% {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        50% {
+            opacity: 1;
+            transform: scale(1.4);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+
+
+
 <div class="container-fluid">
   <div class="row">
 
@@ -179,69 +245,3 @@
   </div>
 </div>
 
-
-<style>.card img {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-}
-.card img:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
-}
-
-
-    /* ----- FEATURES SECTION ----- */
-.features {
-    padding: 80px 0;
-    text-align: center;
-}
-.feature-card {
-    transition: transform 1s, box-shadow 0.5s;
-    border-radius: 15px;
-    padding: 40px 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,5);
-    background: #2C2A2A;
-    margin:20px;
-}
-.feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow:0 8px 25px rgba(0,0,0,0.2);
-}
-.feature-card i {
-    font-size:5rem;
-    color: #FFFFFF;
-    margin-bottom:15px;
-}.feature-card h4 {
-    color: #FFFFFF;
-    
-}.feature-card p {
-    color: #FFFFFF;
-  
-}
-
-@@keyframes fillStars {
-    0% { width:0%; }
-    100% { width:100%; }
-}
-
-
-
-
-    /* Keyframes for fill animation */
-    @@keyframes starFill {
-        0% {
-            opacity: 0;
-            transform: scale(0);
-        }
-
-        50% {
-            opacity: 1;
-            transform: scale(1.4);
-        }
-
-        100% {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-</style>
