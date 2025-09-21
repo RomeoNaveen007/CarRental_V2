@@ -12,8 +12,8 @@ using Pick_To_Ride.Data;
 namespace Pick_To_Ride.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250920014552_Initialmigration")]
-    partial class Initialmigration
+    [Migration("20250921054110_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

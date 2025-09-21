@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Payment Success";
+}
+
+<link rel="stylesheet" href="~/css/custom.css" />
+
+<div class="container mt-5 text-center">
+    @await Html.PartialAsync("_Message")
+
+    <div class="custom-card">
+        <h2 class="text-success">🎉 Payment Successful!</h2>
+        <p>Your booking has been confirmed. Please check your email for confirmation details.</p>
+        <a asp-controller="Booking" asp-action="Index" class="btn btn-primary-custom btn-custom">Back to Bookings</a>
+    </div>
+</div>

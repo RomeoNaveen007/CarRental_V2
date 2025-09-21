@@ -1,28 +1,46 @@
-﻿@model Pick_To_Ride.ViewModels.PaymentViewModel
+﻿@model Pick_To_Ride.Models.Entities.Booking
 @{
-    ViewData["Title"] = "Make Payment";
+    ViewData["Title"] = "Payment";
 }
 
-<link rel="stylesheet" href="~/css/payment.css" />
+<div class="zoom-card">
+    <h2 class="text-center mb-4">💳 Payment for Booking</h2>
 
-<div class="payment-container">
-    <h2 class="title">Payment for Booking</h2>
-    <p class="details">@Model.BookingDetails</p>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="card mb-4 p-3 shadow-sm">
+        <h5>Booking Details</h5>
+        <p><b>Booking Code:</b> @Model.BookingCode</p>
+        <p><b>Car:</b> @Model.CarId</p>
+        <p><b>From:</b> @Model.StartDate.ToShortDateString() → <b>To:</b> @Model.EndDate.ToShortDateString()</p>
+    </div>
 
     <form asp-action="Pay" method="post">
-        <input type="hidden" asp-for="BookingId" />
+        <input type="hidden" name="bookingId" value="@Model.BookingId" />
 
-        <div class="form-group">
-            <label asp-for="Amount"></label>
-            <input asp-for="Amount" class="form-control" readonly />
-            <span asp-validation-for="Amount" class="text-danger"></span>
+        <div class="form-group mb-3">
+            <label for="CardNumber">Card Number</label>
+            <input type="text" id="CardNumber" name="CardNumber" class="form-control" placeholder="1234 5678 9012 3456" required />
         </div>
 
-        <button type="submit" class="btn-submit">Pay Now</button>
-        <a asp-action="Cancel" asp-route-bookingId="@Model.BookingId" class="btn-cancel">Cancel</a>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="Expiry">Expiry Date</label>
+                <input type="text" id="Expiry" name="Expiry" class="form-control" placeholder="MM/YY" required />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="CVC">CVC</label>
+                <input type="text" id="CVC" name="CVC" class="form-control" placeholder="123" required />
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Confirm & Pay</button>
     </form>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

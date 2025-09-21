@@ -130,6 +130,7 @@ namespace Pick_To_Ride.Controllers
         {
             if (!ModelState.IsValid)
             {
+                // reload dropdowns for cars & drivers
                 model.AvailableCars = await _context.Cars.Where(c => c.IsActive).ToListAsync();
                 model.AvailableDrivers = await _context.Staffs.Include(s => s.User)
                     .Where(s => s.IsDriver && s.Availability == StaffAvailability.Available)
@@ -138,22 +139,52 @@ namespace Pick_To_Ride.Controllers
             }
 
             var userId = GetCurrentUserId();
-            if (userId == Guid.Empty) return Forbid();
+            if (userId == Guid.Empty)
+            {
+                // Guest tried booking → redirect them to register
+                var returnUrl = Url.Action("Create", "Booking");
+                return RedirectToAction("Register", "Account", new { returnUrl });
+            }
 
-            model.CustomerId = userId;
+            // ✅ Validate Car exists
+            var car = await _context.Cars.FindAsync(model.CarId);
+            if (car == null)
+            {
+                ModelState.AddModelError("", "Selected car not found.");
+                model.AvailableCars = await _context.Cars.Where(c => c.IsActive).ToListAsync();
+                model.AvailableDrivers = await _context.Staffs.Include(s => s.User)
+                    .Where(s => s.IsDriver && s.Availability == StaffAvailability.Available)
+                    .ToListAsync();
+                return View(model);
+            }
 
+            // ✅ Compute days (inclusive)
+            var start = model.StartDate.Date;
+            var end = model.EndDate.Date;
+            var days = (end - start).Days + 1;
+            if (days <= 0) days = 1;
+
+            // ✅ Pricing (read from config or fallback)
+            decimal bookingCharge = _config.GetValue<decimal?>("Pricing:BookingCharge") ?? 500m;
+            decimal driverDailyRate = _config.GetValue<decimal?>("Pricing:DriverDailyRate") ?? 2000m;
+
+            decimal carCost = car.DailyRate * days;
+            decimal driverCost = model.DriverRequired ? (driverDailyRate * days) : 0m;
+            decimal totalAmount = bookingCharge + carCost + driverCost;
+
+            // ✅ Create booking entity
             var booking = new Booking
             {
                 BookingId = Guid.NewGuid(),
                 CarId = model.CarId,
-                CustomerId = model.CustomerId,
-                DriverId = model.DriverRequired ? model.DriverId : null, // only assign driver if required
+                CustomerId = userId,
+                DriverId = model.DriverRequired ? model.DriverId : null,
                 StartDate = model.StartDate,
                 EndDate = model.EndDate,
                 BookingCode = GenerateBookingCode(),
                 Status = BookingStatus.Booked,
-                TotalAmount = model.TotalAmount,
-                PickupLocation = model.DriverRequired ? model.PickupLocation : null, // only ask location if driver required
+                TotalAmount = totalAmount, // ✅ computed on server
+                PickupLocation = model.DriverRequired ? model.PickupLocation : null,
                 DriverRequired = model.DriverRequired,
                 CreatedAt = DateTime.UtcNow
             };
@@ -161,6 +192,7 @@ namespace Pick_To_Ride.Controllers
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
+            // ✅ Send email + notification
             var customer = await _context.Users.FindAsync(userId);
             if (customer != null)
             {
@@ -180,6 +212,7 @@ namespace Pick_To_Ride.Controllers
             TempData["Success"] = "Booking created successfully!";
             return RedirectToAction("Pay", "Payment");
         }
+
 
         // ✅ Edit GET
         public async Task<IActionResult> Edit(Guid id)
@@ -277,3 +310,5 @@ namespace Pick_To_Ride.Controllers
 
     }
 }
+
+
