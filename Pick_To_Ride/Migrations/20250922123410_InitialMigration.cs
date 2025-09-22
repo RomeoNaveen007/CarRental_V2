@@ -171,10 +171,10 @@ namespace Pick_To_Ride.Migrations
                     DriverId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BookingCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
+                    BookingCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PickupLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PickupLocation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DriverRequired = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)

@@ -67,7 +67,6 @@ namespace Pick_To_Ride.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("BookingCode")
-                        .IsRequired()
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)");
 
@@ -90,7 +89,6 @@ namespace Pick_To_Ride.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PickupLocation")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")

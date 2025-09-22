@@ -49,7 +49,6 @@ namespace Pick_To_Ride.Controllers
             return View(vm);
         }
 
-        // POST: process payment (simulated)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePayment(PaymentViewModel vm)
@@ -63,7 +62,12 @@ namespace Pick_To_Ride.Controllers
 
             if (booking == null) return NotFound();
 
-            // create payment record
+            if (booking.Status == BookingStatus.Booked)
+            {
+                TempData["Info"] = "This booking is already confirmed.";
+                return RedirectToAction("Success", new { bookingId = booking.BookingId });
+            }
+
             var payment = new Payment
             {
                 PaymentId = Guid.NewGuid(),
@@ -77,12 +81,10 @@ namespace Pick_To_Ride.Controllers
 
             _context.Payments.Add(payment);
 
-            // update booking status to Booked
             booking.Status = BookingStatus.Booked;
             booking.UpdatedAt = DateTime.UtcNow;
             _context.Bookings.Update(booking);
 
-            // If driver assigned and driver required, add DriverSchedule to block dates
             if (booking.DriverId.HasValue && booking.DriverRequired)
             {
                 var schedule = new DriverSchedule
@@ -94,12 +96,10 @@ namespace Pick_To_Ride.Controllers
                 };
                 _context.DriverSchedules.Add(schedule);
 
-                // Optionally set Staff.Availability to OnDuty (single flag)
                 var staff = await _context.Staffs.FindAsync(booking.DriverId.Value);
                 if (staff != null) staff.Availability = StaffAvailability.OnDuty;
             }
 
-            // create notification for user
             var notif = new Notification
             {
                 NotificationId = Guid.NewGuid(),
@@ -113,25 +113,19 @@ namespace Pick_To_Ride.Controllers
 
             await _context.SaveChangesAsync();
 
-            // send email about booking + payment
-            var body = new StringBuilder();
-            body.AppendLine($"<p>Hi {booking.Customer.FullName},</p>");
-            body.AppendLine($"<p>Your booking <strong>{booking.BookingCode}</strong> has been confirmed.</p>");
-            body.AppendLine($"<p>Car: {booking.Car?.CarName}<br/>From: {booking.StartDate:yyyy-MM-dd} To: {booking.EndDate:yyyy-MM-dd}<br/>Total: {booking.TotalAmount:C}</p>");
-            body.AppendLine($"<p>Payment reference: {payment.PaymentId}</p>");
-            body.AppendLine("<p>Thank you for choosing Pick To Ride.</p>");
-
             try
             {
-                await _emailHelper.SendEmailAsync(booking.Customer.Email, "Booking Confirmed - PickToRide", body.ToString());
+                var body = $@"
+            <p>Hi {booking.Customer.FullName},</p>
+            <p>Your booking <strong>{booking.BookingCode}</strong> has been confirmed.</p>
+            <p>Car: {booking.Car?.CarName}<br/>From: {booking.StartDate:yyyy-MM-dd} To: {booking.EndDate:yyyy-MM-dd}<br/>Total: {booking.TotalAmount:C}</p>
+            <p>Payment reference: {payment.PaymentId}</p>
+            <p>Thank you for choosing Pick To Ride.</p>";
+                await _emailHelper.SendEmailAsync(booking.Customer.Email, "Booking Confirmed - PickToRide", body);
             }
-            catch
-            {
-                // do not fail if email sending fails
-            }
+            catch { }
 
             TempData["Success"] = $"Booking {booking.BookingCode} confirmed and payment received.";
-            // After success, redirect to a success page or my bookings depending on role
             return RedirectToAction("Success", new { bookingId = booking.BookingId });
         }
 

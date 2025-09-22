@@ -12,7 +12,7 @@ using Pick_To_Ride.Data;
 namespace Pick_To_Ride.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250922005546_InitialMigration")]
+    [Migration("20250922123410_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -70,7 +70,6 @@ namespace Pick_To_Ride.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("BookingCode")
-                        .IsRequired()
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)");
 
@@ -93,7 +92,6 @@ namespace Pick_To_Ride.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PickupLocation")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
