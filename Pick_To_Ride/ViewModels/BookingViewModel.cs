@@ -1,4 +1,5 @@
-﻿using Pick_To_Ride.Attributes;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Pick_To_Ride.Attributes;
 using Pick_To_Ride.Models.Entities;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,12 +13,8 @@ namespace Pick_To_Ride.ViewModels
         public Guid CarId { get; set; }
         public string SelectedCarName { get; set; }
 
-
-        // Will be set on server from authenticated user if not provided
         public Guid CustomerId { get; set; }
 
-
-        // Optional driver
         public Guid? DriverId { get; set; }
 
         [Required(ErrorMessage = "Start date is required.")]
@@ -29,28 +26,31 @@ namespace Pick_To_Ride.ViewModels
         [DateGreaterThan("StartDate", ErrorMessage = "End date must be after start date.")]
         public DateTime EndDate { get; set; }
 
-        [StringLength(6)]
+        [BindNever]
         public string BookingCode { get; set; }
 
+        [BindNever]
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
-        [Required(ErrorMessage = "Total amount is required.")]
+        [BindNever]
         [Range(0, double.MaxValue)]
         public decimal TotalAmount { get; set; }
 
         [StringLength(200)]
-        public string PickupLocation { get; set; } // conditionally required
+        public string? PickupLocation { get; set; }
 
         public bool DriverRequired { get; set; }
 
+        [BindNever]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [BindNever]
         public DateTime? UpdatedAt { get; set; }
 
-        // For drop-downs in views
-        public IEnumerable<Models.Entities.Car> AvailableCars { get; set; }
-        public IEnumerable<Models.Entities.Staff> AvailableDrivers { get; set; }
+        // Dropdowns
+        public IEnumerable<Car> AvailableCars { get; set; }
+        public IEnumerable<Staff> AvailableDrivers { get; set; }
 
-        // Server-side conditional validation
+        // ✅ Server-side conditional validation
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (DriverRequired)
@@ -77,7 +77,6 @@ namespace Pick_To_Ride.ViewModels
                     new[] { nameof(EndDate) });
             }
 
-            // If DriverId selected, ensure DriverRequired == true (help protect against inconsistent UI)
             if (DriverId.HasValue && !DriverRequired)
             {
                 yield return new ValidationResult(
@@ -85,14 +84,5 @@ namespace Pick_To_Ride.ViewModels
                     new[] { nameof(DriverId), nameof(DriverRequired) });
             }
         }
-
-        public enum BookingStatus
-        {
-            Pending = 0,     // booking created, awaiting payment/confirmation
-            Confirmed = 1,   // payment done or admin approved
-            Cancelled = 2,   // booking cancelled by user or admin
-            Completed = 3    // rental finished successfully
-        }
-
     }
 }

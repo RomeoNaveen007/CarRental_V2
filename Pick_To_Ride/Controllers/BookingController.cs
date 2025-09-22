@@ -6,6 +6,7 @@ using Pick_To_Ride.Models.Entities;
 using Pick_To_Ride.ViewModels;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Pick_To_Ride.Controllers
@@ -19,7 +20,7 @@ namespace Pick_To_Ride.Controllers
             _context = context;
         }
 
-        // Catalog view - shows all cars with "Book Now"
+        // ✅ Catalog view - shows all cars with "Book Now"
         [AllowAnonymous]
         public async Task<IActionResult> Catalog()
         {
@@ -27,60 +28,55 @@ namespace Pick_To_Ride.Controllers
             return View(cars);
         }
 
-        // GET: create booking page. carId optional (from Catalog->BookNow)
+        // ✅ Show booking form
         [HttpGet]
-        public async Task<IActionResult> Create(Guid? carId, string carName )
+        public async Task<IActionResult> Create(Guid? carId, string carName)
         {
-            var vm = new BookingViewModel();
-            vm.AvailableCars = await _context.Cars.ToListAsync();
-
-            // drivers list for selection
-            vm.AvailableDrivers = await _context.Staffs
-                .Include(s => s.User)
-                .Where(s => s.IsDriver)
-                .ToListAsync();
+            var vm = new BookingViewModel
+            {
+                AvailableCars = await _context.Cars.ToListAsync(),
+                AvailableDrivers = await _context.Staffs
+                    .Include(s => s.User)
+                    .Where(s => s.IsDriver)
+                    .ToListAsync(),
+                StartDate = DateTime.Now.Date,
+                EndDate = DateTime.Now.Date.AddDays(1)
+            };
 
             if (carId.HasValue)
             {
                 vm.CarId = carId.Value;
-                vm.SelectedCarName = carName ?? (await _context.Cars.FindAsync(carId.Value))?.CarName;
+                vm.SelectedCarName = !string.IsNullOrEmpty(carName)
+                    ? carName
+                    : (await _context.Cars.FindAsync(carId.Value))?.CarName;
             }
 
-            // if user is authenticated, set CustomerId
             if (User.Identity.IsAuthenticated)
             {
-                var uid = Guid.Parse(User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
-                vm.CustomerId = uid;
+                var uidString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (Guid.TryParse(uidString, out var uid))
+                {
+                    vm.CustomerId = uid;
+                }
             }
-
-            // default dates
-            vm.StartDate = DateTime.UtcNow.Date;
-            vm.EndDate = DateTime.UtcNow.Date.AddDays(1);
 
             return View(vm);
         }
 
-        // POST: create booking (saves Booking, redirects to Payment/Create)
+        // ✅ Handle booking submit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BookingViewModel vm)
         {
-            // repopulate dropdowns in case of error
             vm.AvailableCars = await _context.Cars.ToListAsync();
             vm.AvailableDrivers = await _context.Staffs.Include(s => s.User).Where(s => s.IsDriver).ToListAsync();
 
-            if (!ModelState.IsValid)
-                return View(vm);
-
-            // ensure customer exists (if not logged in, redirect to login/register while preserving model)
             if (!User.Identity.IsAuthenticated)
             {
-                // store booking temp in TempData (serialize) or session - simple approach: put in TempData as JSON
                 TempData["BookingTemp"] = System.Text.Json.JsonSerializer.Serialize(vm);
                 return RedirectToAction("Login", "Account", new { returnUrl = Url.Action("ResumeBooking", "Booking") });
             }
 
-            // ensure selected car exists
             var car = await _context.Cars.FindAsync(vm.CarId);
             if (car == null)
             {
@@ -88,12 +84,22 @@ namespace Pick_To_Ride.Controllers
                 return View(vm);
             }
 
-            // calculate days inclusive: if same day assume 1 day
+            var uid = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            vm.CustomerId = uid;
+            vm.SelectedCarName = car.CarName;
+
             var days = (vm.EndDate.Date - vm.StartDate.Date).Days;
-            if (days < 0) { ModelState.AddModelError("EndDate", "End date must be after start date."); return View(vm); }
-            days = Math.Max(1, days); // ensure at least 1
-            // daily charges:
-            var carDaily = car.DailyRate; // assume Car has DailyRate decimal
+            if (days < 0)
+            {
+                ModelState.AddModelError("EndDate", "End date must be after start date.");
+                return View(vm);
+            }
+            days = Math.Max(1, days);
+
+            if (!ModelState.IsValid) return View(vm);
+
+            // ✅ Calculate totals
+            var carDaily = car.DailyRate;
             var driverDaily = vm.DriverRequired ? 2000m : 0m;
             var bookingFee = 500m;
             var total = (carDaily + driverDaily) * days + bookingFee;
@@ -114,14 +120,21 @@ namespace Pick_To_Ride.Controllers
                 CreatedAt = DateTime.UtcNow
             };
 
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Bookings.Add(booking);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error saving booking: {ex.Message}");
+                return View(vm);
+            }
 
-            // redirect to payment create for this booking
             return RedirectToAction("CreatePayment", "Payment", new { bookingId = booking.BookingId });
         }
 
-        // helper: resume booking when guest logs in
+        // Helper: Resume booking when guest logs in
         [Authorize]
         public IActionResult ResumeBooking()
         {
@@ -133,11 +146,9 @@ namespace Pick_To_Ride.Controllers
             var json = TempData["BookingTemp"].ToString();
             var vm = System.Text.Json.JsonSerializer.Deserialize<BookingViewModel>(json);
 
-            // set customer id from logged-in user
-            var uid = Guid.Parse(User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            var uid = Guid.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
             vm.CustomerId = uid;
 
-            // show create view with prefilled vm
             vm.AvailableCars = _context.Cars.ToList();
             vm.AvailableDrivers = _context.Staffs.Include(s => s.User).Where(s => s.IsDriver).ToList();
 
@@ -146,13 +157,12 @@ namespace Pick_To_Ride.Controllers
 
         private string GenerateBookingCode()
         {
-            // 6-char alphanumeric
             var chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
             var r = new Random();
             return new string(Enumerable.Range(0, 6).Select(i => chars[r.Next(chars.Length)]).ToArray());
         }
 
-        // Index for Admin/Staff to list all bookings (CRUD)
+        // ✅ Admin/Staff Index
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Index()
         {
@@ -164,6 +174,7 @@ namespace Pick_To_Ride.Controllers
             return View(bookings);
         }
 
+        // ✅ Edit (Admin/Staff only)
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -182,7 +193,6 @@ namespace Pick_To_Ride.Controllers
                 DriverRequired = booking.DriverRequired,
                 PickupLocation = booking.PickupLocation,
                 TotalAmount = booking.TotalAmount,
-         //       Status =  booking.Status,
                 AvailableCars = _context.Cars.ToList(),
                 AvailableDrivers = _context.Staffs.Include(s => s.User).ToList()
             };
@@ -205,16 +215,23 @@ namespace Pick_To_Ride.Controllers
             booking.PickupLocation = vm.DriverRequired ? vm.PickupLocation : null;
             booking.StartDate = vm.StartDate;
             booking.EndDate = vm.EndDate;
-            booking.TotalAmount = vm.TotalAmount;
-           // booking.Status = vm.Status;
             booking.UpdatedAt = DateTime.UtcNow;
 
-            _context.Bookings.Update(booking);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Bookings.Update(booking);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error updating booking: {ex.Message}");
+                return View(vm);
+            }
 
             return RedirectToAction("Index");
         }
 
+        // ✅ Delete
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Delete(Guid id)
         {
