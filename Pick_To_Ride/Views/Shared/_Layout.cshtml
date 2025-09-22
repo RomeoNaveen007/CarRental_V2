@@ -21,23 +21,38 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/custom.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-    <!-- Navbar -->
+
+    <!-- Top Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
         <div class="container-fluid">
+            <!-- Brand -->
             <a class="navbar-brand" href="#">Admin Panel</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+
+            <!-- Always visible profile & logout on all screens -->
+            <div class="d-flex align-items-center ms-auto d-lg-none">
+                <img src="@profileImage" class="rounded-circle me-2" style="width:40px;height:40px;" />
+                <a class="nav-link text-white me-2" asp-controller="Users" asp-action="Details" asp-route-id="@userId">
+                    @fullName
+                </a>
+                <a class="nav-link text-danger" asp-controller="Account" asp-action="Logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </div>
+
+            <!-- Collapsible Menu (other links for large screens) -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
                 <ul class="navbar-nav align-items-center gap-3">
-                    <li class="nav-item d-flex align-items-center">
-                        <img src="@profileImage" class="profile-img rounded-circle me-2" />
-                        <a class="nav-link text-white" asp-controller="Users" asp-action="Details" asp-route-id="@userId">@fullName</a>
-                    </li>
-                    <li class="nav-item">
+                    <!-- Desktop profile & logout (hidden on mobile) -->
+                    <li class="nav-item d-none d-lg-flex align-items-center">
+                        <img src="@profileImage" class="rounded-circle me-2" style="width:40px;height:40px;" />
+                        <a class="nav-link text-white" asp-controller="Users" asp-action="Details" asp-route-id="@userId">
+                            @fullName
+                        </a>
                         <a class="nav-link text-danger" asp-controller="Account" asp-action="Logout">
                             <i class="bi bi-box-arrow-right"></i> Logout
                         </a>
@@ -46,6 +61,7 @@
             </div>
         </div>
     </nav>
+
 
     <div class="d-flex flex-grow-1">
 
@@ -57,24 +73,28 @@
             </div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="Dashboard" asp-action="Index">
-                        <i class="bi bi-house-door"></i> Dashboard
-                    </a>
+                    <a class="nav-link" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-house-door"></i> Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="Car" asp-action="GetAllCars">
-                        <i class="bi bi-car-front"></i> Cars
-                    </a>
+                    <a class="nav-link" asp-controller="Car" asp-action="GetAllCars"><i class="bi bi-car-front"></i> Cars</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="Users" asp-action="Index">
-                        <i class="bi bi-people"></i> Users
-                    </a>
+                    <a class="nav-link" asp-controller="Users" asp-action="Index"><i class="bi bi-people"></i> Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="Booking" asp-action="Index">
-                        <i class="bi bi-journal-check"></i> Bookings
-                    </a>
+                    <a class="nav-link" asp-controller="Booking" asp-action="Index"><i class="bi bi-journal-check"></i> Bookings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Payment" asp-action="Index"><i class="bi bi-credit-card"></i> Payments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Reports" asp-action="Index"><i class="bi bi-graph-up"></i> Reports</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="AuditLogs" asp-action="Index"><i class="bi bi-clipboard-check"></i> Audit Logs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Settings" asp-action="Index"><i class="bi bi-gear"></i> Settings</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link d-flex justify-content-between align-items-center"
@@ -97,56 +117,83 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Payment" asp-action="CreatePayment">
-                        <i class="bi bi-credit-card"></i> Payments
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Reports" asp-action="Index">
-                        <i class="bi bi-graph-up"></i> Reports
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="AuditLogs" asp-action="Index">
-                        <i class="bi bi-clipboard-check"></i> Audit Logs
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Settings" asp-action="Index">
-                        <i class="bi bi-gear"></i> Settings
-                    </a>
-                </li>
             </ul>
         </nav>
 
-        <!-- Offcanvas sidebar for mobile -->
-        <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileSidebar">
+        <!-- Mobile Sidebar Toggle -->
+        <div class="d-lg-none bg-dark text-white w-100">
+            <button class="btn btn-primary m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+                <i class="bi bi-list"></i> Menu
+            </button>
+        </div>
+
+        <!-- Offcanvas for mobile -->
+        <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="mobileSidebar">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title">Pick To Ride</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                <div class="text-center py-3">
+                    <img src="~/uploads/logos/logo.jpeg" alt="Logo" class="sidebar-logo mb-2" />
+                    <h5 class="sidebar-title">Pick To Ride</h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
             </div>
-            <div class="offcanvas-body">
+            <div class="offcanvas-body p-0">
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-house-door"></i> Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Car" asp-action="GetAllCars"><i class="bi bi-car-front"></i> Cars</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Users" asp-action="Index"><i class="bi bi-people"></i> Users</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Booking" asp-action="Index"><i class="bi bi-journal-check"></i> Bookings</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-house-door"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Car" asp-action="GetAllCars"><i class="bi bi-car-front"></i> Cars</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Users" asp-action="Index"><i class="bi bi-people"></i> Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Booking" asp-action="Index"><i class="bi bi-journal-check"></i> Bookings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Payment" asp-action="Index"><i class="bi bi-credit-card"></i> Payments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Reports" asp-action="Index"><i class="bi bi-graph-up"></i> Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="AuditLogs" asp-action="Index"><i class="bi bi-clipboard-check"></i> Audit Logs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Settings" asp-action="Index"><i class="bi bi-gear"></i> Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex justify-content-between align-items-center"
+                           data-bs-toggle="collapse" href="#staffSubmenu" role="button">
+                            <span><i class="bi bi-person-badge"></i> Staff Management</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </a>
+                        <div class="collapse ps-3" id="staffSubmenu">
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Staff" asp-action="Index" asp-route-role="Staff">
+                                        <i class="bi bi-people"></i> General Staff
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Staff" asp-action="Index" asp-route-role="Driver">
+                                        <i class="bi bi-truck"></i> Drivers
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <!-- Add other links similarly -->
                 </ul>
             </div>
         </div>
 
-        <!-- Main content -->
-        <div class="flex-grow-1 d-flex flex-column p-3">
-            <partial name="_Alerts" />
-            <main class="flex-grow-1">
-                @RenderBody()
-            </main>
-            <footer class="bg-dark text-center text-white py-2 mt-auto">
-                &copy; @DateTime.Now.Year - Pick To Ride
-            </footer>
-        </div>
+        <!-- Main Content -->
+        <main class="flex-grow-1 p-3">
+            @RenderBody()
+        </main>
     </div>
+
 
     <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

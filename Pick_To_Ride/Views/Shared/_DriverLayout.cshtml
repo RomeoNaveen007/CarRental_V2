@@ -8,7 +8,8 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom.css" />
 
     <style>
         body {
@@ -141,40 +142,89 @@
 </head>
 <body>
 
-    <!-- 🔝 Navbar -->
-    <nav class="navbar navbar-expand navbar-dark shadow-sm">
+    <!-- 🔝 Driver Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h4">Driver Panel</span>
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item me-3">
-                    <a class="nav-link position-relative" href="/Driver/Notifications">
-                        <i class="fas fa-bell fa-lg"></i>
-                    </a>
-                </li>
-                <li class="nav-item d-flex align-items-center me-3">
-                    <img src="/uploads/profiles/driver.jpg" alt="Driver" class="rounded-circle" style="width:35px;height:35px;" />
-                    <a class="nav-link" href="/Driver/Profile">Alex Driver</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-warning" href="/Account/Logout">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
-                </li>
-            </ul>
+
+            <!-- Mobile: Profile + Logout -->
+            <div class="d-flex align-items-center ms-auto d-lg-none">
+                <a class="nav-link me-3" href="/Driver/Notifications">
+                    <i class="fas fa-bell fa-lg"></i>
+                </a>
+                <img src="/uploads/profiles/driver.jpg" alt="Driver" class="rounded-circle me-2" style="width:35px;height:35px;" />
+                <a class="nav-link text-white me-2" href="/Driver/Profile">Alex Driver</a>
+                <a class="nav-link text-warning" href="/Account/Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+
+            <!-- Desktop Profile + Logout -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <ul class="navbar-nav align-items-center gap-3">
+                    <li class="nav-item d-none d-lg-block me-3">
+                        <a class="nav-link position-relative" href="/Driver/Notifications">
+                            <i class="fas fa-bell fa-lg"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-lg-flex align-items-center me-3">
+                        <img src="/uploads/profiles/driver.jpg" alt="Driver" class="rounded-circle me-2" style="width:35px;height:35px;" />
+                        <a class="nav-link text-white" href="/Driver/Profile">Alex Driver</a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link text-warning" href="/Account/Logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <!-- 🔷 Sidebar -->
-    <div class="sidebar">
-        <h4>🚕 Car Rendal</h4>
-        <a href="/Driver" class="@(ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")">
-            <i class="fas fa-tachometer-alt"></i> Dashboard
-        </a>
-        <a href="/Driver/MyRides"><i class="fas fa-route"></i> My Rides</a>
-        <a href="/Driver/Earnings"><i class="fas fa-wallet"></i> Earnings</a>
-        <a href="/Driver/Schedule"><i class="fas fa-calendar-alt"></i> Schedule</a>
-        <a href="/Driver/Support"><i class="fas fa-headset"></i> Support</a>
+
+
+    <div class="d-flex flex-grow-1">
+        <!-- Sidebar (Desktop) -->
+        <nav id="sidebar" class="sidebar bg-dark text-white flex-shrink-0 d-none d-lg-block">
+            <div class="text-center py-3">
+                <img src="@Url.Content("~/uploads/logos/logo.jpeg")" alt="Logo" class="sidebar-logo mb-2" />
+
+                <h5 class="sidebar-title">Pick To Ride</h5>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" href="/Driver"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Driver/MyRides"><i class="fas fa-route"></i> My Rides</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Driver/Earnings"><i class="fas fa-wallet"></i> Earnings</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Driver/Schedule"><i class="fas fa-calendar-alt"></i> Schedule</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Driver/Support"><i class="fas fa-headset"></i> Support</a></li>
+            </ul>
+        </nav>
+
+        <!-- Mobile Sidebar Toggle -->
+        <div class="d-lg-none bg-dark text-white w-100">
+            <button class="btn btn-primary m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#driverSidebar">
+                <i class="bi bi-list"></i> Menu
+            </button>
+        </div>
+
+        <!-- Offcanvas Sidebar (Mobile) -->
+        <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="driverSidebar">
+            <div class="offcanvas-header">
+                <h5 class="sidebar-title">🚕 Car Rendal</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body p-0">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="/Driver"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Driver/MyRides"><i class="fas fa-route"></i> My Rides</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Driver/Earnings"><i class="fas fa-wallet"></i> Earnings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Driver/Schedule"><i class="fas fa-calendar-alt"></i> Schedule</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Driver/Support"><i class="fas fa-headset"></i> Support</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
+
 
     <!-- 🔷 Main Content -->
     <div class="main-content">
