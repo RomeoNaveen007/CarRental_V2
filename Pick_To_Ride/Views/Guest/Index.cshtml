@@ -1,6 +1,8 @@
-﻿@{
+﻿@model List<Pick_To_Ride.Models.Entities.Car>
+
+@{
     ViewData["Title"] = "Car Rental - Home";
-    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    
 }
 
 
@@ -10,26 +12,48 @@
     <!-- Main Content Column -->
     <div class="col-lg-9 col-12">
 
-      <!-- Hero Section -->
-      <div class="hero-section text-white text-center d-flex align-items-center justify-content-center position-relative"
-           style="background: url('@Url.Content("~/uploads/offers/A_1.png")') no-repeat center center; 
-                  background-size: cover; 
-                  height: 90vh;">
+            <!-- ================= HERO + SEARCH ================= -->
+            <div class="hero-section text-white text-center d-flex align-items-center justify-content-center position-relative"
+                 style="background: url('@Url.Content("~/uploads/offers/A_1.png")') no-repeat center center;
+            background-size: cover;
+            height: 90vh;">
 
-          <div class="overlay position-absolute top-0 start-0 w-100 h-100" 
-               style="background: rgba(0,0,0,0.5);"></div>
+                <!-- Overlay -->
+                <div class="overlay position-absolute top-0 start-0 w-100 h-100"
+                     style="background: rgba(0,0,0,0.5);"></div>
 
-          <div class="content position-relative">
-                    <h1 class="display-6 fw-bold">Welcome to</h1>
-              <h1 class="display-2 fw-bold">Pick to Ride </h1>
-                    <h1 class="display- fw-bold">Rental Service</h1>
-              <p class="lead mb-4">Book your dream car anytime, anywhere with just a few clicks!</p>
-              <a asp-controller="Customer" asp-action="CarDetails" 
-                 class="btn btn-lg btn-primary shadow-lg me-2">View Car</a>
-              <a asp-controller="Account" asp-action="Register" 
-                 class="btn btn-lg btn-outline-light shadow-lg">Register</a>
-          </div>
-      </div>
+                <!-- Content -->
+                <div class="content position-relative">
+                    <h1 class="fw-bold"><span id="typing-text"></span></h1>
+                    <h1 class="fw-bold"><span id="typing-text"></span></h1>
+                    <h1 class="fw-bold"><span id="typing-text"></span></h1>
+                    <p class="lead mb-4 fw-bold">
+                        Book your Dream car anytime, anywhere with just a few clicks!
+                    </p>
+
+                    <a asp-controller="Customer" asp-action="CarDetails"
+                       class="btn btn-lg btn-primary shadow-lg me-2">View Car</a>
+                    <a asp-controller="Account" asp-action="Register"
+                       class="btn btn-lg btn-outline-light shadow-lg">Register</a>
+                </div>              
+            </div>
+            <div class="container py-5">
+                <h2 class="mb-4 text-center">Search Available Cars</h2>
+
+                <form asp-controller="Guest" asp-action="SearchAvailableCars" method="post" class="row g-3 justify-content-center">
+                    <div class="col-md-3">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" name="startDate" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">End Date</label>
+                        <input type="date" name="endDate" class="form-control" required>
+                    </div>
+                    <div class="col-md-2 align-self-end">
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </form>
+            </div>
 
       <!-- Gallery Section -->
       <section class="section-howto py-5">
@@ -87,36 +111,102 @@
           </div>
       </section>
 
+           
             <!-- FEATURES SECTION -->
-            <section class="features container">
-                <h2 class="mb-5">Why Choose Us?</h2>
+            <section class="features container my-5">
+                <h2 class="mb-5 text-center">Why Choose Us?</h2>
                 <div class="row justify-content-center">
-                    <div class="col-md-4">
-                        <div class="feature-card animate__animated animate__zoomIn">
-                            <i class="bi bi-car-front"></i>
-                            <h4>Wide Range of Cars</h4>
-                            <p>Choose from economy to luxury cars for your perfect trip.</p>
+
+                    <!-- Card 1 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <!-- Front -->
+                                <div class="flip-card-front d-flex flex-column align-items-center justify-content-center">
+                                    <i class="bi bi-car-front display-4 mb-3"></i>
+                                    <h4>Wide Range of Cars</h4>
+                                    <p>From economy to luxury cars</p>
+                                </div>
+                                <!-- Back -->
+                                <div class="flip-card-back d-flex flex-column align-items-center justify-content-center">
+                                    <h5>Find Your Perfect Ride</h5>
+                                    <p>We offer hatchbacks, sedans, SUVs & luxury cars to suit every trip and budget.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="feature-card animate__animated animate__zoomIn animate__delay-0s">
-                            <i class="bi bi-speedometer2"></i>
-                            <h4>Easy & Fast Booking</h4>
-                            <p>Book your car in just a few clicks, anytime, anywhere.</p>
+
+                    <!-- Card 2 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front d-flex flex-column align-items-center justify-content-center">
+                                    <i class="bi bi-speedometer2 display-4 mb-3"></i>
+                                    <h4>Easy & Fast Booking</h4>
+                                    <p>Book anytime, anywhere</p>
+                                </div>
+                                <div class="flip-card-back d-flex flex-column align-items-center justify-content-center">
+                                    <h5>Seamless Experience</h5>
+                                    <p>Our system lets you book cars in minutes with instant confirmation and updates.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="feature-card animate__animated animate__zoomIn animate__delay-0s">
-                            <i class="bi bi-wallet2"></i>
-                            <h4>Affordable Prices</h4>
-                            <p>Get the best deals without compromising quality and comfort.</p>
+
+                    <!-- Card 3 -->
+                    <div class="col-md-4 mb-4">
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front d-flex flex-column align-items-center justify-content-center">
+                                    <i class="bi bi-wallet2 display-4 mb-3"></i>
+                                    <h4>Affordable Prices</h4>
+                                    <p>Value for your money</p>
+                                </div>
+                                <div class="flip-card-back d-flex flex-column align-items-center justify-content-center">
+                                    <h5>Best Deals</h5>
+                                    <p>Get competitive rates, discounts & seasonal offers without hidden charges.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </section>
 
 
+            <!-- ✅ Stats Counter Section -->
+            <section class="stats-section py-5 bg-light">
+                <div class="container text-center">
+                    <h2 class="mb-5">Our Achievements</h2>
+                    <div class="row">
 
+                        <!-- Stat 1 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="stat-box p-4 shadow-sm rounded bg-white">
+                                <h1 class="counter text-primary" data-target="50">0</h1>
+                                <p>Available Cars ---- 🚗</p>
+                            </div>
+                        </div>
+
+                        <!-- Stat 2 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="stat-box p-4 shadow-sm rounded bg-white">
+                                <h1 class="counter text-success" data-target="200">0</h1>
+                                <p>Happy Customers ---- 🧑‍💼</p>
+                            </div>
+                        </div>
+
+                        <!-- Stat 3 -->
+                        <div class="col-md-4 mb-4">
+                            <div class="stat-box p-4 shadow-sm rounded bg-white">
+                                <h1 class="counter text-danger" data-target="150">0</h1>
+                                <p>Service Staff & Driver ---- 🧑‍✈️</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
        
 
       <!-- Contact Us Section -->
@@ -219,13 +309,59 @@
   
 }
 
-@@keyframes fillStars {
-    0% { width:0%; }
-    100% { width:100%; }
-}
+    .flip-card {
+        background: #CECECE;
+        width: 100%;
+        height: 250px;
+        perspective: 1000px;
+    }
 
+    .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
 
+    .flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+    }
 
+    .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+    }
+
+    .flip-card-front {
+        background: #2C2A2A;
+        color: white;
+    }
+
+    .flip-card-back {
+        background: #0d6efd;
+        color: white;
+        transform: rotateY(180deg);
+    }
+
+    .stat-box {
+        transition: transform 0.3s;
+    }
+
+        .stat-box:hover {
+            transform: translateY(-10px);
+        }
+
+    .counter {
+        font-size: 3rem;
+        font-weight: bold;
+    }
 
     /* Keyframes for fill animation */
     @@keyframes starFill {
@@ -245,3 +381,100 @@
         }
     }
 </style>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200; // smaller = faster
+
+        const animateCounter = (counter) => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText;
+            const inc = Math.ceil(target / speed);
+
+            if (count < target) {
+                counter.innerText = count + inc;
+                setTimeout(() => animateCounter(counter), 20);
+            } else {
+                counter.innerText = target;
+            }
+        };
+
+        // Trigger animation on scroll into view
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => observer.observe(counter));
+    });
+
+    function applyFilter() {
+        var type = document.getElementById("filterType").value.toLowerCase();
+        var price = parseFloat(document.getElementById("filterPrice").value);
+        var rows = document.querySelectorAll("#carsTable tbody tr");
+
+        rows.forEach(row => {
+            var carType = row.getAttribute("data-type").toLowerCase();
+            var carPrice = parseFloat(row.getAttribute("data-price"));
+
+            var show = true;
+
+            if (type && carType !== type) show = false;
+            if (!isNaN(price) && carPrice > price) show = false;
+
+            row.style.display = show ? "" : "none";
+        });
+    }
+
+    // Typing Effect Script
+    document.addEventListener("DOMContentLoaded", function () {
+        const texts = [" Welcome to", " Pick 2 Ride", " Rental Service"];
+        const element = document.getElementById("typing-text");
+        let textIndex = 0; // Which text
+        let charIndex = 0; // Which character
+
+        function type() {
+            if (textIndex < texts.length) {
+                const currentText = texts[textIndex];
+                if (charIndex < currentText.length) {
+                    element.innerHTML += currentText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, 150);
+                } else {
+                    // Move to next text
+                    textIndex++;
+                    charIndex = 0;
+                    setTimeout(type, 150); // slight delay between texts
+                }
+            }
+        }
+
+        type();
+    });
+
+
+    
+    document.querySelectorAll(".gallery-item img").forEach(img => {
+        img.addEventListener("click", () => {
+            const modal = document.createElement("div");
+            modal.className = "lightbox";
+            modal.innerHTML = `<div class="lightbox-content text-center p-3 bg-dark">
+                                    <img src="${img.src}" class="img-fluid rounded">
+                                </div>`;
+            document.body.appendChild(modal);
+            modal.style.position = "fixed";
+            modal.style.top = 0; modal.style.left = 0; modal.style.width = "100%"; modal.style.height = "100%";
+            modal.style.background = "rgba(0,0,0,0.8)";
+            modal.style.display = "flex"; modal.style.alignItems = "center"; modal.style.justifyContent = "center";
+            modal.addEventListener("click", () => modal.remove());
+        });
+    });
+
+    
+</script>
