@@ -38,7 +38,7 @@ namespace Pick_To_Ride.Models.Entities
         public string BookingCode { get; set; }
 
         [Required]
-        public BookingStatus Status { get; set; } = BookingStatus.Pending;
+        public BookingStatus Status { get; set; }
 
         [Required(ErrorMessage = "Total amount is required.")]
         [Range(0, double.MaxValue)]

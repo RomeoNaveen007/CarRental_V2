@@ -8,7 +8,7 @@ namespace Pick_To_Ride.Models.Entities
         public Guid PaymentId { get; set; } = Guid.NewGuid();
 
         [Required]
-        public Guid BookingId { get; set; }
+        public Guid BookingId { get; set; } 
         public Booking Booking { get; set; }
 
         [Required]

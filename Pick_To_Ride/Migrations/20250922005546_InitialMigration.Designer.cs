@@ -12,7 +12,7 @@ using Pick_To_Ride.Data;
 namespace Pick_To_Ride.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250921054110_InitialMigration")]
+    [Migration("20250922005546_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -211,6 +211,31 @@ namespace Pick_To_Ride.Migrations
                     b.HasKey("CarId");
 
                     b.ToTable("Cars");
+                });
+
+            modelBuilder.Entity("Pick_To_Ride.Models.Entities.DriverSchedule", b =>
+                {
+                    b.Property<Guid>("DriverScheduleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("StaffId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("DriverScheduleId");
+
+                    b.HasIndex("StaffId");
+
+                    b.ToTable("DriverSchedules");
                 });
 
             modelBuilder.Entity("Pick_To_Ride.Models.Entities.HandOverRecord", b =>
@@ -466,7 +491,8 @@ namespace Pick_To_Ride.Migrations
 
                     b.HasOne("Pick_To_Ride.Models.Entities.Staff", "Driver")
                         .WithMany()
-                        .HasForeignKey("DriverId");
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Car");
 
@@ -484,6 +510,17 @@ namespace Pick_To_Ride.Migrations
                         .IsRequired();
 
                     b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("Pick_To_Ride.Models.Entities.DriverSchedule", b =>
+                {
+                    b.HasOne("Pick_To_Ride.Models.Entities.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("Pick_To_Ride.Models.Entities.Payment", b =>
