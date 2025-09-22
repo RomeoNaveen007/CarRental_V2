@@ -1,132 +1,145 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Pick_To_Ride.Data;
+using Pick_To_Ride.Helpers;
 using Pick_To_Ride.Models.Entities;
 using Pick_To_Ride.ViewModels;
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using static Pick_To_Ride.Program;
 
 namespace Pick_To_Ride.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly EmailHelper _emailHelper;
 
-        public PaymentController(ApplicationDbContext context)
+        public PaymentController(ApplicationDbContext context, IOptions<Program.SmtpSettings> smtpOptions)
         {
             _context = context;
+            _emailHelper = new EmailHelper(smtpOptions);
         }
 
-        // GET: Payment/Index
-        // Shows all payments (Admin/Staff use case)
-        public async Task<IActionResult> Index()
+        // GET: show payment page for booking
+        [HttpGet]
+        public async Task<IActionResult> CreatePayment(Guid bookingId)
         {
-            try
+            var booking = await _context.Bookings
+                .Include(b => b.Car)
+                .Include(b => b.Customer)
+                .Include(b => b.Driver).ThenInclude(d => d.User)
+                .FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
+            if (booking == null) return NotFound();
+
+            var vm = new PaymentViewModel
             {
-                var payments = await _context.Payments
-                    .Include(p => p.Booking)
-                    .OrderByDescending(p => p.PaymentDate)
-                    .ToListAsync();
+                BookingId = booking.BookingId,
+                Amount = booking.TotalAmount,
+                BookingDetails = $"Car: {booking.Car?.CarName} | From: {booking.StartDate:yyyy-MM-dd} To: {booking.EndDate:yyyy-MM-dd} | Code: {booking.BookingCode}",
+                Status = "Pending"
+            };
 
-                return View(payments);
-            }
-            catch (Exception ex)
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreatePayment(PaymentViewModel vm)
+        {
+            if (!ModelState.IsValid) return View(vm);
+
+            var booking = await _context.Bookings
+                .Include(b => b.Car)
+                .Include(b => b.Customer)
+                .FirstOrDefaultAsync(b => b.BookingId == vm.BookingId);
+
+            if (booking == null) return NotFound();
+
+            if (booking.Status == BookingStatus.Booked)
             {
-                TempData["Error"] = "Error loading payments: " + ex.Message;
-                return View("Error");
+                TempData["Info"] = "This booking is already confirmed.";
+                return RedirectToAction("Success", new { bookingId = booking.BookingId });
             }
-        }
-
-        // GET: Payment/Details/{id}
-        // Shows details of a single payment
-        public async Task<IActionResult> Details(Guid id)
-        {
-            if (id == Guid.Empty)
-                return BadRequest("Invalid payment ID.");
-
-            var payment = await _context.Payments
-                .Include(p => p.Booking)
-                .FirstOrDefaultAsync(p => p.PaymentId == id);
-
-            if (payment == null)
-                return NotFound("Payment not found.");
-
-            return View(payment);
-        }
-
-        // GET: Payment/Pay/{bookingId}
-        // Creates a payment for a booking
-        public async Task<IActionResult> Pay(Guid bookingId)
-        {
-            var booking = await _context.Bookings.FindAsync(bookingId);
-            if (booking == null) return NotFound("Booking not found.");
 
             var payment = new Payment
             {
-                BookingId = bookingId,
-                Amount = booking.TotalAmount,
-                Method = "Card",
+                PaymentId = Guid.NewGuid(),
+                BookingId = booking.BookingId,
+                Amount = vm.Amount,
                 PaymentDate = DateTime.UtcNow,
-                Status = PaymentStatus.Paid
+                Method = vm.Method ?? "Card",
+                Status = PaymentStatus.Paid,
+                CreatedAt = DateTime.UtcNow
             };
 
-            try
+            _context.Payments.Add(payment);
+
+            booking.Status = BookingStatus.Booked;
+            booking.UpdatedAt = DateTime.UtcNow;
+            _context.Bookings.Update(booking);
+
+            if (booking.DriverId.HasValue && booking.DriverRequired)
             {
-                _context.Payments.Add(payment);
-                booking.Status = BookingStatus.Booked;
-                await _context.SaveChangesAsync();
-
-                TempData["Success"] = "🎉 Payment successful! Your booking has been confirmed.";
-                return RedirectToAction("Success");
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "⚠️ Payment failed: " + ex.Message;
-                return RedirectToAction("Error");
-            }
-        }
-
-        // GET: Payment/Cancel/{bookingId}
-        // Cancels booking and records cancellation as a payment
-        public async Task<IActionResult> Cancel(Guid bookingId)
-        {
-            var booking = await _context.Bookings.FindAsync(bookingId);
-            if (booking == null) return NotFound("Booking not found.");
-
-            try
-            {
-                booking.Status = BookingStatus.Cancelled;
-
-                var payment = new Payment
+                var schedule = new DriverSchedule
                 {
-                    BookingId = bookingId,
-                    Amount = 0,
-                    Method = "Card",
-                    PaymentDate = DateTime.UtcNow,
-                    Status = PaymentStatus.Cancelled
+                    StaffId = booking.DriverId.Value,
+                    StartDate = booking.StartDate.Date,
+                    EndDate = booking.EndDate.Date,
+                    BookingId = booking.BookingId
                 };
+                _context.DriverSchedules.Add(schedule);
 
-                _context.Payments.Add(payment);
-                await _context.SaveChangesAsync();
-
-                TempData["Info"] = "❌ Booking and payment cancelled.";
-                return RedirectToAction("Cancelled");
+                var staff = await _context.Staffs.FindAsync(booking.DriverId.Value);
+                if (staff != null) staff.Availability = StaffAvailability.OnDuty;
             }
-            catch (Exception ex)
+
+            var notif = new Notification
             {
-                TempData["Error"] = "Cancellation failed: " + ex.Message;
-                return RedirectToAction("Error");
+                NotificationId = Guid.NewGuid(),
+                UserId = booking.CustomerId,
+                Title = "Booking Confirmed",
+                Message = $"Your booking {booking.BookingCode} is confirmed. Amount paid: {payment.Amount:C}.",
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Notifications.Add(notif);
+
+            await _context.SaveChangesAsync();
+
+            try
+            {
+                var body = $@"
+            <p>Hi {booking.Customer.FullName},</p>
+            <p>Your booking <strong>{booking.BookingCode}</strong> has been confirmed.</p>
+            <p>Car: {booking.Car?.CarName}<br/>From: {booking.StartDate:yyyy-MM-dd} To: {booking.EndDate:yyyy-MM-dd}<br/>Total: {booking.TotalAmount:C}</p>
+            <p>Payment reference: {payment.PaymentId}</p>
+            <p>Thank you for choosing Pick To Ride.</p>";
+                await _emailHelper.SendEmailAsync(booking.Customer.Email, "Booking Confirmed - PickToRide", body);
             }
+            catch { }
+
+            TempData["Success"] = $"Booking {booking.BookingCode} confirmed and payment received.";
+            return RedirectToAction("Success", new { bookingId = booking.BookingId });
         }
 
-        // Success page
-        public IActionResult Success() => View();
+        [AllowAnonymous]
+        public async Task<IActionResult> Success(Guid bookingId)
+        {
+            var booking = await _context.Bookings
+                .Include(b => b.Car)
+                .Include(b => b.Customer)
+                .FirstOrDefaultAsync(b => b.BookingId == bookingId);
+            if (booking == null) return NotFound();
 
-        // Cancelled page
-        public IActionResult Cancelled() => View();
-
-        // Error page
-        public IActionResult Error() => View();
+            ViewBag.Message = $"Booking {booking.BookingCode} confirmed.";
+            return View(booking);
+        }
     }
 }

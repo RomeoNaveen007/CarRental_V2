@@ -1,0 +1,17 @@
+﻿@model Pick_To_Ride.Models.Entities.Booking
+@{
+    ViewData["Title"] = "Booking Successful";
+}
+
+<div class="container py-4">
+    <div class="alert alert-success">
+        <h4>Booking Confirmed</h4>
+        <p>Your booking <strong>@Model.BookingCode</strong> is confirmed.</p>
+        <p>Car: @Model.Car?.CarName</p>
+        <p>From: @Model.StartDate:yyyy-MM-dd To: @Model.EndDate:yyyy-MM-dd</p>
+        <p>Total: @Model.TotalAmount.ToString("C")</p>
+    </div>
+
+    <a class="btn btn-primary" asp-controller="Booking" asp-action="Create">New Booking</a>
+    <a class="btn btn-secondary" asp-controller="Booking" asp-action="Index">My Bookings</a>
+</div>

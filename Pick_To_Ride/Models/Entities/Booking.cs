@@ -33,19 +33,17 @@ namespace Pick_To_Ride.Models.Entities
         [DateGreaterThan("StartDate", ErrorMessage = "End date must be after start date.")]
         public DateTime EndDate { get; set; }
 
-        [Required]
         [StringLength(6)]
-        public string BookingCode { get; set; }
+        public string? BookingCode { get; set; } // generated server-side
 
         [Required]
-        public BookingStatus Status { get; set; } = BookingStatus.Pending;
+        public BookingStatus Status { get; set; }
 
-        [Required(ErrorMessage = "Total amount is required.")]
         [Range(0, double.MaxValue)]
         public decimal TotalAmount { get; set; }
 
-        [Required(ErrorMessage = "Pickup location required")]
-        public string PickupLocation { get; set; }
+        // ✅ Make this optional in DB (nullable) - only required when DriverRequired = true
+        public string? PickupLocation { get; set; }
 
         public bool DriverRequired { get; set; }
 

@@ -42,10 +42,12 @@
                                 </div>
 
                                 <div class="btn-group" role="group">
-                                    <a asp-controller="Car" asp-action="CarDetails" asp-route-id="@car.CarId"
-                                       class="btn btn-sm btn-outline-primary">Details</a>
-                                    <a asp-controller="Booking" asp-action="Create" asp-route-carId="@car.CarId"
-                                       class="btn btn-sm btn-success">Book</a>
+                                    
+                                    <a asp-controller="Booking" asp-action="Create" asp-route-carId="@car.CarId" asp-route-CarName="@car.CarName"
+                                       class="btn btn-primary"
+                                       onclick="if (!@User.Identity.IsAuthenticated) { alert('Please login to continue booking.'); window.location.href='/Account/Login'; return false; }">
+                                        Book Now
+                                    </a>
                                 </div>
                             </div>
                         </div>

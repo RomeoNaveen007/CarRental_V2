@@ -39,6 +39,9 @@ namespace Pick_To_Ride
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("CarRental")));
 
+            // ✅ Configure SMTP settings (comes from appsettings.json → "SmtpSettings")
+            builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
             var app = builder.Build();
 
             // ✅ Seed default admin
@@ -94,7 +97,7 @@ namespace Pick_To_Ride
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Guest}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

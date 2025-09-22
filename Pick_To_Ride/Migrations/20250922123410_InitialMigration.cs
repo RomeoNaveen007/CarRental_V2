@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Pick_To_Ride.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialmigration : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -171,10 +171,10 @@ namespace Pick_To_Ride.Migrations
                     DriverId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BookingCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
+                    BookingCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PickupLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PickupLocation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DriverRequired = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -192,12 +192,34 @@ namespace Pick_To_Ride.Migrations
                         name: "FK_Bookings_Staffs_DriverId",
                         column: x => x.DriverId,
                         principalTable: "Staffs",
-                        principalColumn: "StaffId");
+                        principalColumn: "StaffId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Bookings_Users_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Users",
                         principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DriverSchedules",
+                columns: table => new
+                {
+                    DriverScheduleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StaffId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BookingId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DriverSchedules", x => x.DriverScheduleId);
+                    table.ForeignKey(
+                        name: "FK_DriverSchedules_Staffs_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staffs",
+                        principalColumn: "StaffId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -268,6 +290,11 @@ namespace Pick_To_Ride.Migrations
                 column: "DriverId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DriverSchedules_StaffId",
+                table: "DriverSchedules",
+                column: "StaffId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Payments_BookingId",
                 table: "Payments",
                 column: "BookingId");
@@ -286,6 +313,9 @@ namespace Pick_To_Ride.Migrations
 
             migrationBuilder.DropTable(
                 name: "BookingExtentionRequests");
+
+            migrationBuilder.DropTable(
+                name: "DriverSchedules");
 
             migrationBuilder.DropTable(
                 name: "HandOverRecords");

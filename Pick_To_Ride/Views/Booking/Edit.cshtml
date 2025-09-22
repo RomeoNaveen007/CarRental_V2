@@ -3,72 +3,57 @@
     ViewData["Title"] = "Edit Booking";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4">
+    <h2 class="mb-3 text-primary">@ViewData["Title"]</h2>
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="BookingId" />
+    <div class="card shadow-lg rounded-3 p-4">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="BookingId" />
 
-    <div class="mb-3">
-        <label asp-for="CarId" class="form-label"></label>
-        <select asp-for="CarId" class="form-select" asp-items="@(new SelectList(Model.AvailableCars, "CarId", "CarName"))">
-            <option value="">Select a car</option>
-        </select>
-        <span asp-validation-for="CarId" class="text-danger"></span>
+            <div class="mb-3">
+                <label asp-for="CarId" class="form-label fw-bold"></label>
+                <select asp-for="CarId" asp-items="@(new SelectList(Model.AvailableCars, "CarId", "CarName", Model.CarId))" class="form-select"></select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DriverId" class="form-label fw-bold"></label>
+                <select asp-for="DriverId" asp-items="@(new SelectList(Model.AvailableDrivers, "StaffId", "User.FullName", Model.DriverId))" class="form-select">
+                    <option value="">-- No Driver --</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="StartDate" class="form-label fw-bold"></label>
+                    <input asp-for="StartDate" type="date" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EndDate" class="form-label fw-bold"></label>
+                    <input asp-for="EndDate" type="date" class="form-control" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PickupLocation" class="form-label fw-bold"></label>
+                <input asp-for="PickupLocation" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TotalAmount" class="form-label fw-bold"></label>
+                <input asp-for="TotalAmount" class="form-control" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Status" class="form-label fw-bold"></label>
+                <select asp-for="Status" class="form-select">
+                    <option>Pending</option>
+                    <option>Confirmed</option>
+                    <option>Cancelled</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Save Changes</button>
+            <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+        </form>
     </div>
-
-    <div class="mb-3 form-check">
-        <input type="checkbox" asp-for="DriverRequired" class="form-check-input" id="driverRequiredCheck" />
-        <label class="form-check-label" for="driverRequiredCheck">Driver Required</label>
-    </div>
-
-    <div class="mb-3" id="driverDiv" style="display:@(Model.DriverRequired ? "block" : "none")">
-        <label asp-for="DriverId" class="form-label"></label>
-        <select asp-for="DriverId" class="form-select" asp-items="@(new SelectList(Model.AvailableDrivers, "StaffId", "User.FullName"))">
-            <option value="">Select a driver</option>
-        </select>
-    </div>
-
-    <div class="mb-3" id="pickupDiv" style="display:@(Model.DriverRequired ? "block" : "none")">
-        <label asp-for="PickupLocation" class="form-label"></label>
-        <input asp-for="PickupLocation" class="form-control" />
-        <span asp-validation-for="PickupLocation" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="StartDate" class="form-label"></label>
-        <input asp-for="StartDate" class="form-control" type="date" />
-        <span asp-validation-for="StartDate" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="EndDate" class="form-label"></label>
-        <input asp-for="EndDate" class="form-control" type="date" />
-        <span asp-validation-for="EndDate" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="TotalAmount" class="form-label"></label>
-        <input asp-for="TotalAmount" class="form-control" type="number" step="0.01" />
-        <span asp-validation-for="TotalAmount" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Update Booking</button>
-</form>
-
-@section Scripts {
-    <script>
-        const driverCheck = document.getElementById('driverRequiredCheck');
-        const driverDiv = document.getElementById('driverDiv');
-        const pickupDiv = document.getElementById('pickupDiv');
-
-        driverCheck.addEventListener('change', function () {
-            if (this.checked) {
-                driverDiv.style.display = 'block';
-                pickupDiv.style.display = 'block';
-            } else {
-                driverDiv.style.display = 'none';
-                pickupDiv.style.display = 'none';
-            }
-        });
-    </script>
-}
+</div>

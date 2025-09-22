@@ -1,15 +1,11 @@
-﻿// Controllers/BookingController.cs
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Pick_To_Ride.Data;
 using Pick_To_Ride.Models.Entities;
 using Pick_To_Ride.ViewModels;
 using System;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -19,261 +15,242 @@ namespace Pick_To_Ride.Controllers
     public class BookingController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IConfiguration _config;
-
-        public BookingController(ApplicationDbContext context, IConfiguration config)
+        public BookingController(ApplicationDbContext context)
         {
             _context = context;
-            _config = config;
         }
 
-        // ✅ Helper: get logged-in user ID from claims
-        private Guid GetCurrentUserId()
+        // ✅ Catalog view - shows all cars with "Book Now"
+        [AllowAnonymous]
+        public async Task<IActionResult> Catalog()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return Guid.TryParse(userIdClaim, out var uid) ? uid : Guid.Empty;
+            var cars = await _context.Cars.ToListAsync();
+            return View(cars);
         }
 
-        // ✅ Helper: generate unique 6-char booking code
-        private string GenerateBookingCode()
+        // ✅ Show booking form
+        [HttpGet]
+        public async Task<IActionResult> Create(Guid? carId, string carName)
         {
-            var rng = new Random();
-            const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-            return new string(Enumerable.Range(0, 6).Select(_ => chars[rng.Next(chars.Length)]).ToArray());
-        }
-
-        // ✅ Helper: send email (reads SMTP from appsettings.json)
-        private async Task SendEmailAsync(string toEmail, string subject, string body)
-        {
-            try
+            var vm = new BookingViewModel
             {
-                var fromEmail = _config["Email:From"];
-                var password = _config["Email:Password"];
-
-                var fromAddress = new MailAddress(fromEmail, "Pick To Ride");
-                var toAddress = new MailAddress(toEmail);
-
-                using var smtp = new SmtpClient
-                {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
-                    EnableSsl = true,
-                    Credentials = new NetworkCredential(fromAddress.Address, password)
-                };
-
-                using var message = new MailMessage(fromAddress, toAddress)
-                {
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = true
-                };
-
-                await smtp.SendMailAsync(message);
-            }
-            catch (Exception ex)
-            {
-                // log error in real app
-                Console.WriteLine($"Email error: {ex.Message}");
-            }
-        }
-
-        // ✅ Index: show user’s bookings
-        public async Task<IActionResult> Index()
-        {
-            var userId = GetCurrentUserId();
-            var bookings = await _context.Bookings
-                .Include(b => b.Car)
-                .Include(b => b.Driver).ThenInclude(s => s.User)
-                .Where(b => b.CustomerId == userId)
-                .OrderByDescending(b => b.CreatedAt)
-                .ToListAsync();
-
-            return View(bookings);
-        }
-
-        // ✅ Details
-        public async Task<IActionResult> Details(Guid id)
-        {
-            if (id == Guid.Empty) return BadRequest();
-
-            var booking = await _context.Bookings
-                .Include(b => b.Car)
-                .Include(b => b.Customer)
-                .Include(b => b.Driver).ThenInclude(d => d.User)
-                .FirstOrDefaultAsync(b => b.BookingId == id);
-
-            if (booking == null) return NotFound();
-
-            if (booking.CustomerId != GetCurrentUserId()) return Forbid();
-
-            return View(booking);
-        }
-
-        // ✅ Create GET
-        public async Task<IActionResult> Create()
-        {
-            var model = new BookingViewModel
-            {
-                BookingCode = GenerateBookingCode(),
-                AvailableCars = await _context.Cars.Where(c => c.IsActive).ToListAsync(),
-                AvailableDrivers = await _context.Staffs.Include(s => s.User)
-                    .Where(s => s.IsDriver && s.Availability == StaffAvailability.Available)
-                    .ToListAsync()
+                AvailableCars = await _context.Cars.ToListAsync(),
+                AvailableDrivers = await _context.Staffs
+                    .Include(s => s.User)
+                    .Where(s => s.IsDriver)
+                    .ToListAsync(),
+                StartDate = DateTime.Now.Date,
+                EndDate = DateTime.Now.Date.AddDays(1)
             };
-            return View(model);
+
+            if (carId.HasValue)
+            {
+                vm.CarId = carId.Value;
+                vm.SelectedCarName = !string.IsNullOrEmpty(carName)
+                    ? carName
+                    : (await _context.Cars.FindAsync(carId.Value))?.CarName;
+            }
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var uidString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (Guid.TryParse(uidString, out var uid))
+                {
+                    vm.CustomerId = uid;
+                }
+            }
+
+            return View(vm);
         }
 
-        // ✅ Create POST
+        // ✅ Handle booking submit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BookingViewModel model)
+        public async Task<IActionResult> Create(BookingViewModel vm)
         {
-            if (!ModelState.IsValid)
+            vm.AvailableCars = await _context.Cars.ToListAsync();
+            vm.AvailableDrivers = await _context.Staffs.Include(s => s.User).Where(s => s.IsDriver).ToListAsync();
+
+            if (!User.Identity.IsAuthenticated)
             {
-                model.AvailableCars = await _context.Cars.Where(c => c.IsActive).ToListAsync();
-                model.AvailableDrivers = await _context.Staffs.Include(s => s.User)
-                    .Where(s => s.IsDriver && s.Availability == StaffAvailability.Available)
-                    .ToListAsync();
-                return View(model);
+                TempData["BookingTemp"] = System.Text.Json.JsonSerializer.Serialize(vm);
+                return RedirectToAction("Login", "Account", new { returnUrl = Url.Action("ResumeBooking", "Booking") });
             }
 
-            var userId = GetCurrentUserId();
-            if (userId == Guid.Empty) return Forbid();
+            var car = await _context.Cars.FindAsync(vm.CarId);
+            if (car == null)
+            {
+                ModelState.AddModelError("", "Selected car not found.");
+                return View(vm);
+            }
 
-            model.CustomerId = userId;
+            var uid = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            vm.CustomerId = uid;
+            vm.SelectedCarName = car.CarName;
+
+            var days = (vm.EndDate.Date - vm.StartDate.Date).Days;
+            if (days < 0)
+            {
+                ModelState.AddModelError("EndDate", "End date must be after start date.");
+                return View(vm);
+            }
+            days = Math.Max(1, days);
+
+            if (!ModelState.IsValid) return View(vm);
+
+            // ✅ Calculate totals
+            var carDaily = car.DailyRate;
+            var driverDaily = vm.DriverRequired ? 2000m : 0m;
+            var bookingFee = 500m;
+            var total = (carDaily + driverDaily) * days + bookingFee;
 
             var booking = new Booking
             {
                 BookingId = Guid.NewGuid(),
-                CarId = model.CarId,
-                CustomerId = model.CustomerId,
-                DriverId = model.DriverRequired ? model.DriverId : null, // only assign driver if required
-                StartDate = model.StartDate,
-                EndDate = model.EndDate,
+                CarId = vm.CarId,
+                CustomerId = vm.CustomerId,
+                DriverId = vm.DriverId,
+                StartDate = vm.StartDate,
+                EndDate = vm.EndDate,
                 BookingCode = GenerateBookingCode(),
-                Status = BookingStatus.Booked,
-                TotalAmount = model.TotalAmount,
-                PickupLocation = model.DriverRequired ? model.PickupLocation : null, // only ask location if driver required
-                DriverRequired = model.DriverRequired,
+                DriverRequired = vm.DriverRequired,
+                PickupLocation = vm.DriverRequired ? vm.PickupLocation : null,
+                TotalAmount = total,
+                Status = BookingStatus.Pending,
                 CreatedAt = DateTime.UtcNow
             };
 
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
-
-            var customer = await _context.Users.FindAsync(userId);
-            if (customer != null)
+            try
             {
-                string msg = $"Your booking {booking.BookingCode} is confirmed. Pickup: {booking.PickupLocation ?? "N/A"} on {booking.StartDate:yyyy-MM-dd}.";
-                await SendEmailAsync(customer.Email, "Booking Confirmed", msg);
-
-                _context.Notifications.Add(new Notification
-                {
-                    UserId = booking.CustomerId,
-                    Title = "Booking Confirmed",
-                    Message = msg,
-                    CreatedAt = DateTime.UtcNow
-                });
+                _context.Bookings.Add(booking);
                 await _context.SaveChangesAsync();
             }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error saving booking: {ex.Message}");
+                return View(vm);
+            }
 
-            TempData["Success"] = "Booking created successfully!";
-            return RedirectToAction("Pay", "Payment");
+            return RedirectToAction("CreatePayment", "Payment", new { bookingId = booking.BookingId });
         }
 
-        // ✅ Edit GET
+        // Helper: Resume booking when guest logs in
+        [Authorize]
+        public IActionResult ResumeBooking()
+        {
+            if (TempData["BookingTemp"] == null)
+            {
+                return RedirectToAction("Catalog");
+            }
+
+            var json = TempData["BookingTemp"].ToString();
+            var vm = System.Text.Json.JsonSerializer.Deserialize<BookingViewModel>(json);
+
+            var uid = Guid.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            vm.CustomerId = uid;
+
+            vm.AvailableCars = _context.Cars.ToList();
+            vm.AvailableDrivers = _context.Staffs.Include(s => s.User).Where(s => s.IsDriver).ToList();
+
+            return View("Create", vm);
+        }
+
+        private string GenerateBookingCode()
+        {
+            var chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+            var r = new Random();
+            return new string(Enumerable.Range(0, 6).Select(i => chars[r.Next(chars.Length)]).ToArray());
+        }
+
+        // ✅ Admin/Staff Index
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> Index()
+        {
+            var bookings = await _context.Bookings
+                                .Include(b => b.Car)
+                                .Include(b => b.Customer)
+                                .Include(b => b.Driver).ThenInclude(d => d.User)
+                                .ToListAsync();
+            return View(bookings);
+        }
+
+        // ✅ Edit (Admin/Staff only)
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var booking = await _context.Bookings.FindAsync(id);
             if (booking == null) return NotFound();
 
-            if (booking.CustomerId != GetCurrentUserId()) return Forbid();
-
-            var model = new BookingViewModel
+            var vm = new BookingViewModel
             {
                 BookingId = booking.BookingId,
                 CarId = booking.CarId,
+                CustomerId = booking.CustomerId,
                 DriverId = booking.DriverId,
                 StartDate = booking.StartDate,
                 EndDate = booking.EndDate,
                 BookingCode = booking.BookingCode,
-                TotalAmount = booking.TotalAmount,
-                PickupLocation = booking.PickupLocation,
                 DriverRequired = booking.DriverRequired,
-                AvailableCars = await _context.Cars.Where(c => c.IsActive).ToListAsync(),
-                AvailableDrivers = await _context.Staffs.Include(s => s.User).ToListAsync()
+                PickupLocation = booking.PickupLocation,
+                TotalAmount = booking.TotalAmount,
+                AvailableCars = _context.Cars.ToList(),
+                AvailableDrivers = _context.Staffs.Include(s => s.User).ToList()
             };
 
-            return View(model);
+            return View(vm);
         }
 
-        // ✅ Edit POST
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin,Staff")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, BookingViewModel model)
+        public async Task<IActionResult> Edit(BookingViewModel vm)
         {
-            if (id != model.BookingId) return BadRequest();
+            if (!ModelState.IsValid) return View(vm);
 
-            if (!ModelState.IsValid)
+            var booking = await _context.Bookings.FindAsync(vm.BookingId);
+            if (booking == null) return NotFound();
+
+            booking.CarId = vm.CarId;
+            booking.DriverId = vm.DriverId;
+            booking.DriverRequired = vm.DriverRequired;
+            booking.PickupLocation = vm.DriverRequired ? vm.PickupLocation : null;
+            booking.StartDate = vm.StartDate;
+            booking.EndDate = vm.EndDate;
+            booking.UpdatedAt = DateTime.UtcNow;
+
+            try
             {
-                model.AvailableCars = await _context.Cars.Where(c => c.IsActive).ToListAsync();
-                model.AvailableDrivers = await _context.Staffs.Include(s => s.User).ToListAsync();
-                return View(model);
+                _context.Bookings.Update(booking);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error updating booking: {ex.Message}");
+                return View(vm);
             }
 
+            return RedirectToAction("Index");
+        }
+
+        // ✅ Delete
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
             var booking = await _context.Bookings.FindAsync(id);
             if (booking == null) return NotFound();
-
-            if (booking.CustomerId != GetCurrentUserId()) return Forbid();
-
-            booking.CarId = model.CarId;
-            booking.DriverId = model.DriverRequired ? model.DriverId : null;
-            booking.StartDate = model.StartDate;
-            booking.EndDate = model.EndDate;
-            booking.TotalAmount = model.TotalAmount;
-            booking.PickupLocation = model.DriverRequired ? model.PickupLocation : null;
-            booking.DriverRequired = model.DriverRequired;
-            booking.UpdatedAt = DateTime.UtcNow;
-
-            _context.Update(booking);
-            await _context.SaveChangesAsync();
-
-            TempData["Success"] = "Booking updated successfully!";
-            return RedirectToAction(nameof(Index));
+            return View(booking);
         }
 
-        // GET: Booking/Cancel/{id} → show confirmation
-        public async Task<IActionResult> Cancel(Guid id)
-        {
-            var booking = await _context.Bookings
-                .Include(b => b.Car)
-                .Include(b => b.Driver).ThenInclude(s => s.User)
-                .FirstOrDefaultAsync(b => b.BookingId == id);
-
-            if (booking == null) return NotFound();
-            if (booking.CustomerId != GetCurrentUserId()) return Forbid();
-
-            return View(booking); // this will be a confirmation page
-        }
-
-        // POST: Booking/CancelConfirmed/{id} → actually cancel
-        [HttpPost, ActionName("CancelConfirmed")]
+        [HttpPost, ActionName("Delete"), Authorize(Roles = "Admin,Staff")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CancelConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var booking = await _context.Bookings.FindAsync(id);
-            if (booking == null) return NotFound();
-            if (booking.CustomerId != GetCurrentUserId()) return Forbid();
-
-            booking.Status = BookingStatus.Cancelled;
-            booking.UpdatedAt = DateTime.UtcNow;
-
-            _context.Update(booking);
-            await _context.SaveChangesAsync();
-
-            TempData["Success"] = "Booking cancelled successfully!";
-            return RedirectToAction(nameof(Index));
+            if (booking != null)
+            {
+                _context.Bookings.Remove(booking);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
         }
-
     }
 }
