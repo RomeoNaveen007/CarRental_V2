@@ -85,5 +85,14 @@ namespace Pick_To_Ride.ViewModels
                     new[] { nameof(DriverId), nameof(DriverRequired) });
             }
         }
+
+        public enum BookingStatus
+        {
+            Pending = 0,     // booking created, awaiting payment/confirmation
+            Confirmed = 1,   // payment done or admin approved
+            Cancelled = 2,   // booking cancelled by user or admin
+            Completed = 3    // rental finished successfully
+        }
+
     }
 }

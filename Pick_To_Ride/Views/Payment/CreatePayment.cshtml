@@ -1,0 +1,30 @@
+﻿@model Pick_To_Ride.ViewModels.PaymentViewModel
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<div class="container py-4">
+    <h2>Payment</h2>
+
+    <div class="mb-3">
+        <strong>Booking:</strong> @Model.BookingDetails
+    </div>
+
+    <form asp-action="CreatePayment" method="post">
+        <input type="hidden" asp-for="BookingId" />
+        <div class="mb-3">
+            <label asp-for="Amount" class="form-label"></label>
+            <input asp-for="Amount" class="form-control" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Method" class="form-label">Payment Method</label>
+            <select asp-for="Method" class="form-select">
+                <option>Card</option>
+                <option>Cash</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Pay Now</button>
+    </form>
+</div>
