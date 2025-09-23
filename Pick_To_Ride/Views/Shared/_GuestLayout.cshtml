@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <!-- Brand / Title -->
+            <div class="text-center py-3">
+                <img src="@Url.Content("~/uploads/logos/logo.jpeg")" alt="Logo" class="sidebar-logo mb-2" />
+
+                <h5 class="sidebar-title">Pick To Ride</h5>
+            </div>
+
+            <!-- Collapse for mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Right side items -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <style>
+
+        /* ------------ */
+        /* Navbar Profile Container */
+        .navbar .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* spacing between image and name */
+        }
+
+            /* Profile Image */
+            .navbar .profile-container img {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%; /* circular */
+                object-fit: cover;
+                border: 2px solid #ffc107; /* optional border color */
+                transition: transform 0.2s ease;
+            }
+
+                .navbar .profile-container img:hover {
+                    transform: scale(1.1); /* slight zoom on hover */
+                }
+
+            /* Profile Name */
+            .navbar .profile-container .profile-name {
+                color: #fff;
+                font-weight: 500;
+                font-size: 0.95rem;
+            }
+
+            /* Optional: Logout icon next to name */
+            .navbar .profile-container .logout-icon {
+                color: #ffc107;
+                margin-left: 8px;
+                cursor: pointer;
+                transition: color 0.2s ease;
+            }
+
+                .navbar .profile-container .logout-icon:hover {
+                    color: #fff;
+                }
+
+        /* ------------ */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .card img {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+            .card img:hover {
+                transform: scale(1.05);
+                box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
+            }
+
+        /* Flip cards */
+        .flip-card {
+            background: #CECECE;
+            width: 100%;
+            height: 250px;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+        }
+
+        .flip-card-front {
+            background: #2C2A2A;
+            color: white;
+        }
+
+        .flip-card-back {
+            background: #0d6efd;
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Stats */
+        .stat-box {
+            transition: transform 0.3s;
+        }
+
+            .stat-box:hover {
+                transform: translateY(-10px);
+            }
+
+        .counter {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+    </style>
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">Pick 2 Ride</a>
+        </div>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p class="mb-0">&copy; @DateTime.Now.Year Pick 2 Ride. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap & JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Shared JS -->
+    <script>
+        // Counter animation
+        document.addEventListener("DOMContentLoaded", function () {
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200;
+
+            const animateCounter = (counter) => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = Math.ceil(target / speed);
+
+                if (count < target) {
+                    counter.innerText = count + inc;
+                    setTimeout(() => animateCounter(counter), 20);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(counter => observer.observe(counter));
+        });
+
+        // Typing effect
+        document.addEventListener("DOMContentLoaded", function () {
+            const texts = [" Welcome to", " Pick 2 Ride", " Rental Service"];
+            const element = document.getElementById("typing-text");
+            let textIndex = 0, charIndex = 0;
+
+            function type() {
+                if (textIndex < texts.length) {
+                    const currentText = texts[textIndex];
+                    if (charIndex < currentText.length) {
+                        element.innerHTML += currentText.charAt(charIndex);
+                        charIndex++;
+                        setTimeout(type, 150);
+                    } else {
+                        textIndex++;
+                        charIndex = 0;
+                        setTimeout(type, 150);
+                    }
+                }
+            }
+            type();
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

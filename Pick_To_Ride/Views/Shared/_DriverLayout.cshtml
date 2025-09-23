@@ -1,4 +1,11 @@
-﻿
+﻿@using System.Security.Claims
+@{
+    var fullName = User.FindFirst("FullName")?.Value ?? "Driver";
+    var profileImage = User.FindFirst("ProfileImage")?.Value ?? "/uploads/profiles/default-avatar.png";
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+    var role = User.FindFirst(ClaimTypes.Role)?.Value ?? "Driver";
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +21,8 @@
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f1f3f6;
             font-family: 'Poppins', sans-serif;
+            background-color: #f1f3f6;
         }
 
         .sidebar {
@@ -31,10 +37,16 @@
             z-index: 1000;
         }
 
-            .sidebar h4 {
+            .sidebar h5 {
                 text-align: center;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
                 font-weight: 600;
+            }
+
+            .sidebar img.sidebar-logo {
+                width: 120px;
+                height: auto;
+                border-radius: 8px;
             }
 
             .sidebar a {
@@ -82,19 +94,22 @@
         footer {
             margin-left: 240px;
         }
-
+        
         @@media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
+            .sidebar
 
-            .navbar,
-            .main-content,
-            footer {
-                margin-left: 0;
-            }
+        {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+
+        .navbar,
+        .main-content,
+        footer {
+            margin-left: 0;
+        }
+
         }
 
         .hero-section {
@@ -106,8 +121,8 @@
         }
 
         .hero-img {
-            width: 300%;
-            max-width: 700px; /* You can increase this to 600px or more */
+            width: 100%;
+            max-width: 700px;
             height: auto;
             border-radius: 12px;
             animation: zoomIn 1.5s ease;
@@ -115,30 +130,25 @@
             object-fit: cover;
         }
 
-
         .main-content h3 {
             font-weight: 600;
         }
 
-        .main-content p,
-        .main-content li {
-            font-size: 1rem;
-        }
-
         @@keyframes zoomIn {
-            0% {
-                transform: scale(0.8);
-                opacity: 0;
-            }
+            0%
 
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
+        {
+            transform: scale(0.8);
+            opacity: 0;
         }
 
-    </style>
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
 
+        }
+    </style>
 </head>
 <body>
 
@@ -147,13 +157,13 @@
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h4">Driver Panel</span>
 
-            <!-- Mobile: Profile + Logout -->
+            <!-- Mobile Profile + Logout -->
             <div class="d-flex align-items-center ms-auto d-lg-none">
                 <a class="nav-link me-3" href="/Driver/Notifications">
                     <i class="fas fa-bell fa-lg"></i>
                 </a>
-                <img src="/uploads/profiles/driver.jpg" alt="Driver" class="rounded-circle me-2" style="width:35px;height:35px;" />
-                <a class="nav-link text-white me-2" href="/Driver/Profile">Alex Driver</a>
+                <img src="@profileImage" alt="@fullName" class="rounded-circle me-2" style="width:35px;height:35px;" />
+                <a class="nav-link text-white" asp-controller="Users" asp-action="Details" asp-route-id="@userId">@fullName</a>
                 <a class="nav-link text-warning" href="/Account/Logout">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
@@ -168,8 +178,8 @@
                         </a>
                     </li>
                     <li class="nav-item d-none d-lg-flex align-items-center me-3">
-                        <img src="/uploads/profiles/driver.jpg" alt="Driver" class="rounded-circle me-2" style="width:35px;height:35px;" />
-                        <a class="nav-link text-white" href="/Driver/Profile">Alex Driver</a>
+                        <img src="@profileImage" alt="@fullName" class="rounded-circle me-2" style="width:35px;height:35px;" />
+                        <a class="nav-link text-white" asp-controller="Users" asp-action="Details" asp-route-id="@userId">@fullName</a>
                     </li>
                     <li class="nav-item d-none d-lg-block">
                         <a class="nav-link text-warning" href="/Account/Logout">
@@ -181,14 +191,11 @@
         </div>
     </nav>
 
-
-
     <div class="d-flex flex-grow-1">
         <!-- Sidebar (Desktop) -->
         <nav id="sidebar" class="sidebar bg-dark text-white flex-shrink-0 d-none d-lg-block">
             <div class="text-center py-3">
                 <img src="@Url.Content("~/uploads/logos/logo.jpeg")" alt="Logo" class="sidebar-logo mb-2" />
-
                 <h5 class="sidebar-title">Pick To Ride</h5>
             </div>
             <ul class="nav flex-column">
@@ -203,14 +210,14 @@
         <!-- Mobile Sidebar Toggle -->
         <div class="d-lg-none bg-dark text-white w-100">
             <button class="btn btn-primary m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#driverSidebar">
-                <i class="bi bi-list"></i> Menu
+                <i class="fas fa-bars"></i> Menu
             </button>
         </div>
 
         <!-- Offcanvas Sidebar (Mobile) -->
         <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="driverSidebar">
             <div class="offcanvas-header">
-                <h5 class="sidebar-title">🚕 Car Rendal</h5>
+                <h5 class="sidebar-title">🚕 Car Rental</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
             </div>
             <div class="offcanvas-body p-0">
@@ -225,11 +232,10 @@
         </div>
     </div>
 
-
     <!-- 🔷 Main Content -->
     <div class="main-content">
         <div class="d-flex flex-column align-items-center text-center mb-5">
-            <h2> Welcome Driver!</h2>
+            <h2>Welcome, @fullName!</h2>
         </div>
         <div class="hero-section">
             <img src="/uploads/profiles/driver1.jpg" alt="Driver Dashboard" class="hero-img" />
@@ -249,10 +255,6 @@
 
         @RenderBody()
     </div>
-
-
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/script.js"></script>
