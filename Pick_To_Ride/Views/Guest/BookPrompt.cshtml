@@ -1,0 +1,11 @@
+﻿@model Pick_To_Ride.Models.Entities.Car
+
+<div class="text-center p-3">
+    <h5>Please login or register to book this car</h5>
+    <p class="small">Car: <strong>@Model.CarName</strong></p>
+
+    <div class="d-flex justify-content-center gap-3 mt-3">
+        <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Login</a>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-success">Register</a>
+    </div>
+</div>

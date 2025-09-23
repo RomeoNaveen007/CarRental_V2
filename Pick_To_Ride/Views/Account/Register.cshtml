@@ -1,0 +1,226 @@
+﻿@model Pick_To_Ride.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_GuestLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/register.css" />
+
+<style>
+    body {
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px;
+    }
+
+    .form-card {
+        background-color: #fff;
+        padding: 30px 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 700px;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .form-title {
+        text-align: center;
+        margin-bottom: 25px;
+        font-weight: bold;
+        font-size: 26px;
+        color: #333;
+    }
+
+    .register-form .form-group {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .register-form .form-group label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #444;
+        }
+
+    .register-form .form-control {
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        transition: all 0.3s ease;
+        font-size: 15px;
+    }
+
+        .register-form .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+            transform: scale(1.02);
+        }
+
+    .form-check-group {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+    }
+
+    .form-check-label {
+        margin-left: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .profile-preview {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid #007bff;
+        transition: transform 0.3s ease;
+    }
+
+        .profile-preview:hover {
+            transform: scale(1.05);
+        }
+
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(to right, #007bff, #0056b3);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+
+        .submit-btn:hover {
+            background: linear-gradient(to right, #0056b3, #003d80);
+            transform: scale(1.02);
+        }
+
+    .text-danger {
+        font-size: 13px;
+        color: #d9534f;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+</style>
+
+<div class="register-container">
+    <div class="form-card">
+        <h2 class="form-title">Create Account</h2>
+
+        <form asp-action="Register" method="post" enctype="multipart/form-data" class="register-form">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UserName"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NIC"></label>
+                <input asp-for="NIC" class="form-control" />
+                <span asp-validation-for="NIC" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LicenceNumber"></label>
+                <input asp-for="LicenceNumber" class="form-control" />
+                <span asp-validation-for="LicenceNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Address"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="City"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Role</label>
+                <input type="text" class="form-control" value="Customer" readonly />
+            </div>
+
+            <div class="form-check-group">
+                <input asp-for="IsActive" class="form-check-input" />
+                <label asp-for="IsActive" class="form-check-label">Is Active?</label>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProfileImageFile" class="form-label">Profile Image</label>
+                <input asp-for="ProfileImageFile" type="file" class="form-control" />
+            </div>
+
+            @if (Model != null && !string.IsNullOrEmpty(Model.ProfileImage))
+            {
+                <div class="form-group">
+                    <img src="@Model.ProfileImage" alt="Current Image" class="profile-preview" />
+                </div>
+            }
+
+            <button type="submit" class="submit-btn">Register</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
