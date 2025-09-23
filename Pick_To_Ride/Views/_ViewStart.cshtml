@@ -1,9 +1,8 @@
-﻿@* 
-@using System.Security.Claims
+﻿@using System.Security.Claims
 @{
-    var layout = "_GuestLayout"; // Default layout for unauthenticated users
+    string layout = "_GuestLayout" ; // Default for guests (not logged in)
 
-    if (User.Identity.IsAuthenticated)
+    if (User.Identity != null && User.Identity.IsAuthenticated)
     {
         var claimsIdentity = User.Identity as ClaimsIdentity;
         var role = claimsIdentity?.FindFirst(ClaimTypes.Role)?.Value ?? "";
@@ -29,12 +28,12 @@
     }
 
     Layout = layout;
-} *@
+}
 
 
-
+@* 
 @{
     Layout = "_Layout";
-}
+} *@
 
 

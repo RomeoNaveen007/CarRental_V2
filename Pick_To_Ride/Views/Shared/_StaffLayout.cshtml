@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@{
+    var role = User.FindFirst(ClaimTypes.Role)?.Value ?? "Staff";
+    var fullName = User.FindFirst("FullName")?.Value ?? "Staff";
+    var profileImage = User.FindFirst("ProfileImage")?.Value ?? "/uploads/profiles/default-avatar.png";
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -29,31 +37,37 @@
             z-index: 1000;
         }
 
-            .sidebar h4 {
-                text-align: center;
-                margin-bottom: 30px;
-                font-weight: 600;
-            }
+        .sidebar h5 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
 
-            .sidebar a {
-                display: flex;
-                align-items: center;
-                padding: 12px 20px;
-                color: #ccc;
-                text-decoration: none;
-                transition: all 0.3s ease;
-                font-size: 15px;
-            }
+        .sidebar img.sidebar-logo {
+            width: 120px;
+            height: auto;
+            border-radius: 8px;
+        }
 
-                .sidebar a i {
-                    margin-right: 12px;
-                }
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
 
-                .sidebar a:hover,
-                .sidebar a.active {
-                    background-color: #495057;
-                    color: #fff;
-                }
+        .sidebar a i {
+            margin-right: 12px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #495057;
+            color: #fff;
+        }
 
         .navbar {
             margin-left: 240px;
@@ -62,14 +76,14 @@
             padding: 10px 30px;
         }
 
-            .navbar .nav-link,
-            .navbar .navbar-brand {
-                color: #fff;
-            }
+        .navbar .nav-link,
+        .navbar .navbar-brand {
+            color: #fff;
+        }
 
-                .navbar .nav-link:hover {
-                    color: #ffc107;
-                }
+        .navbar .nav-link:hover {
+            color: #ffc107;
+        }
 
         .main-content {
             margin-left: 240px;
@@ -106,9 +120,10 @@
             width: 100%;
             max-width: 700px;
             height: auto;
-            border-radius: 10px;
+            border-radius: 12px;
             animation: zoomIn 1.5s ease;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            object-fit: cover;
         }
 
         @@keyframes zoomIn {
@@ -116,11 +131,11 @@
                 transform: scale(0.8);
                 opacity: 0;
             }
-
             100% {
                 transform: scale(1);
                 opacity: 1;
             }
+        }
     </style>
 </head>
 <body>
@@ -135,8 +150,8 @@
                 <a class="nav-link me-3" href="/Staff/Notifications">
                     <i class="fas fa-bell fa-lg"></i>
                 </a>
-                <img src="/uploads/profiles/staff3.webp" alt="Staff" class="rounded-circle me-2" style="width:35px;height:35px;" />
-                <a class="nav-link text-white me-2" href="/Staff/Profile">Srii</a>
+                <img src="@profileImage" alt="@fullName" class="rounded-circle me-2" style="width:35px;height:35px;" />
+                <a class="nav-link text-white me-2" asp-controller="Users" asp-action="Details" asp-route-id="@userId">@fullName</a>
                 <a class="nav-link text-warning" href="/Account/Logout">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
@@ -151,8 +166,8 @@
                         </a>
                     </li>
                     <li class="nav-item d-none d-lg-flex align-items-center me-3">
-                        <img src="/uploads/profiles/staff3.webp" alt="Staff" class="rounded-circle me-2" style="width:35px;height:35px;" />
-                        <a class="nav-link text-white" href="/Staff/Profile">Srii</a>
+                        <img src="@profileImage" alt="@fullName" class="rounded-circle me-2" style="width:35px;height:35px;" />
+                        <a class="nav-link text-white" asp-controller="Users" asp-action="Details" asp-route-id="@userId">@fullName</a>
                     </li>
                     <li class="nav-item d-none d-lg-block">
                         <a class="nav-link text-warning" href="/Account/Logout">
@@ -164,14 +179,11 @@
         </div>
     </nav>
 
-
-
     <div class="d-flex flex-grow-1">
         <!-- Sidebar (Desktop) -->
         <nav id="sidebar" class="sidebar bg-dark text-white flex-shrink-0 d-none d-lg-block">
             <div class="text-center py-3">
                 <img src="@Url.Content("~/uploads/logos/logo.jpeg")" alt="Logo" class="sidebar-logo mb-2" />
-
                 <h5 class="sidebar-title">Pick To Ride</h5>
             </div>
             <ul class="nav flex-column">
@@ -188,14 +200,14 @@
         <!-- Mobile Sidebar Toggle -->
         <div class="d-lg-none bg-dark text-white w-100">
             <button class="btn btn-primary m-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#staffSidebar">
-                <i class="bi bi-list"></i> Menu
+                <i class="fas fa-bars"></i> Menu
             </button>
         </div>
 
         <!-- Offcanvas Sidebar (Mobile) -->
         <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="staffSidebar">
             <div class="offcanvas-header">
-                <h5 class="sidebar-title">🚗 Car Rendal</h5>
+                <h5 class="sidebar-title">🚗 Car Rental</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
             </div>
             <div class="offcanvas-body p-0">
@@ -212,20 +224,16 @@
         </div>
     </div>
 
-
     <!-- 🔶 Main Content -->
     <div class="main-content">
-        <!-- Welcome Header -->
         <div class="d-flex flex-column align-items-center text-center mb-5">
-            <h2>Welcome Staff Member!</h2>
+            <h2>Welcome, @fullName!</h2>
         </div>
 
-        <!-- Hero Image Section -->
         <div class="hero-section">
-            <img src="~/uploads/profiles/staff2.jpg" alt="Staff Welcome" class="hero-img animated-image" />
+            <img src="~/uploads/profiles/staff2.jpg" alt="Staff Welcome" class="hero-img" />
         </div>
 
-        <!-- Description and Highlights -->
         <div class="d-flex flex-column align-items-center text-center mb-5">
             <h3 class="mb-3">Why Join Our Team?</h3>
             <p class="text-muted px-3">

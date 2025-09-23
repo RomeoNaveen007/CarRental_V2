@@ -2,8 +2,8 @@
 @{
     var claimsIdentity = User.Identity as ClaimsIdentity;
     var userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    var role = claimsIdentity?.FindFirst(ClaimTypes.Role)?.Value ?? "User";
-    var fullName = claimsIdentity?.FindFirst("FullName")?.Value ?? "User";
+    var role = claimsIdentity?.FindFirst(ClaimTypes.Role)?.Value ?? "Admin";
+    var fullName = claimsIdentity?.FindFirst("FullName")?.Value ?? "Admin";
     var profileImage = claimsIdentity?.FindFirst("ProfileImage")?.Value ?? Url.Content("~/uploads/profiles/obito.jpg");
 }
 
