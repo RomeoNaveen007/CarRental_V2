@@ -3,32 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <!-- Brand / Title -->
-            <div class="text-center py-3">
-                <img src="@Url.Content("~/uploads/logos/logo.jpeg")" alt="Logo" class="sidebar-logo mb-2" />
-
-                <h5 class="sidebar-title">Pick To Ride</h5>
-            </div>
-
-            <!-- Collapse for mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Right side items -->
-            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Login</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    
 
 
 
@@ -36,139 +11,100 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
-    <!-- Custom CSS -->
-    <style>
-
-        /* ------------ */
-        /* Navbar Profile Container */
-        .navbar .profile-container {
-            display: flex;
-            align-items: center;
-            gap: 10px; /* spacing between image and name */
+  <style>
+        /* Semi-transparent sticky navbar */
+        .custom-navbar {
+            background: rgba(13, 17, 23, 0.85); /* dark with 85% opacity */
+            padding: 0.4rem 1rem; /* smaller height */
+            transition: background 0.3s ease, padding 0.3s ease;
+            backdrop-filter: blur(6px); /* adds a glassy effect */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 1050;
         }
 
-            /* Profile Image */
-            .navbar .profile-container img {
-                width: 35px;
-                height: 35px;
-                border-radius: 50%; /* circular */
-                object-fit: cover;
-                border: 2px solid #ffc107; /* optional border color */
-                transition: transform 0.2s ease;
-            }
-
-                .navbar .profile-container img:hover {
-                    transform: scale(1.1); /* slight zoom on hover */
-                }
-
-            /* Profile Name */
-            .navbar .profile-container .profile-name {
-                color: #fff;
-                font-weight: 500;
-                font-size: 0.95rem;
-            }
-
-            /* Optional: Logout icon next to name */
-            .navbar .profile-container .logout-icon {
-                color: #ffc107;
-                margin-left: 8px;
-                cursor: pointer;
-                transition: color 0.2s ease;
-            }
-
-                .navbar .profile-container .logout-icon:hover {
-                    color: #fff;
-                }
-
-        /* ------------ */
-        body {
-            font-family: 'Segoe UI', sans-serif;
+        /* Logo */
+        .navbar-logo {
+            height: 32px;
+            width: auto;
+            border-radius: 6px;
+            transition: transform 0.3s ease;
         }
 
-        .card img {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-
-            .card img:hover {
+            .navbar-logo:hover {
                 transform: scale(1.05);
-                box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
             }
 
-        /* Flip cards */
-        .flip-card {
-            background: #CECECE;
-            width: 100%;
-            height: 250px;
-            perspective: 1000px;
+        /* Brand text */
+        .brand-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
         }
 
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
+        /* Nav links */
+        .custom-navbar .nav-link {
+            color: #f1f1f1;
+            font-size: 0.9rem;
+            margin: 0 6px;
         }
 
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.5);
-        }
-
-        .flip-card-front {
-            background: #2C2A2A;
-            color: white;
-        }
-
-        .flip-card-back {
-            background: #0d6efd;
-            color: white;
-            transform: rotateY(180deg);
-        }
-
-        /* Stats */
-        .stat-box {
-            transition: transform 0.3s;
-        }
-
-            .stat-box:hover {
-                transform: translateY(-10px);
+            .custom-navbar .nav-link:hover {
+                color: #ffffff;
             }
 
-        .counter {
-            font-size: 3rem;
-            font-weight: bold;
+        /* Login button - blue */
+        .custom-login-btn {
+            background: #007bff; /* bootstrap blue */
+            color: #fff !important;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 20px;
+            padding: 4px 14px;
+            transition: all 0.3s ease;
         }
-    </style>
 
-    @RenderSection("Styles", required: false)
+            .custom-login-btn:hover {
+                background: #0056b3; /* darker blue */
+                transform: scale(1.05);
+            }
+
+
+  </style>
+   @*  @RenderSection("Styles", required: false) *@
 </head>
 <body>
-    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">Pick 2 Ride</a>
+    <nav class="custom-navbar navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <!-- Brand / Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="@Url.Content("~/uploads/logos/logo.jpeg")" alt="Logo" class="navbar-logo me-2" />
+                <span class="brand-text">Pick To Ride</span>
+            </a>
+
+            <!-- Collapse button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Menu -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="btn custom-login-btn" asp-controller="Account" asp-action="Login">Login</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </header>
+    </nav>
+
+  
 
     <main role="main">
         @RenderBody()
     </main>
 
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <p class="mb-0">&copy; @DateTime.Now.Year Pick 2 Ride. All rights reserved.</p>
-    </footer>
-
+   
     <!-- Bootstrap & JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
